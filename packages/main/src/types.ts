@@ -2,6 +2,7 @@ import BotApi from "./bot_api";
 import Handler from "./handler";
 import TelegramApi from "./telegram_api";
 import Webhook from "./webhook";
+import TelegramBot from "./telegram_bot";
 export { Webhook };
 
 export type Command = (
@@ -22,8 +23,7 @@ export type Kv = Record<string, KVNamespace> | undefined;
 
 export class Config {
 	bot_name: string;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	api: any;
+	api: typeof TelegramBot;
 	webhook: Webhook;
 	commands: Record<string, Command>;
 	kv: Kv;
@@ -32,7 +32,7 @@ export class Config {
 
 	constructor(config: Partial<Config> = {}) {
 		this.bot_name = config.bot_name || "";
-		this.api = config.api || BotApi;
+		this.api = config.api || TelegramBot;
 		this.webhook = config.webhook || new Webhook(localhost, "", localhost);
 		this.commands = config.commands || {};
 		this.kv = config.kv;
