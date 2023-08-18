@@ -2,7 +2,6 @@ import BotApi from "./bot_api";
 import Handler from "./handler";
 import TelegramApi from "./telegram_api";
 import Webhook from "./webhook";
-import TelegramBot from "./telegram_bot";
 export { Webhook };
 
 export type Command = (
