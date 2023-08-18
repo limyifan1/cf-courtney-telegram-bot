@@ -23,7 +23,7 @@ export type Kv = Record<string, KVNamespace> | undefined;
 
 export class Config {
 	bot_name: string;
-	api: typeof TelegramBot;
+	api: typeof BotApi;
 	webhook: Webhook;
 	commands: Record<string, Command>;
 	kv: Kv;
@@ -32,7 +32,7 @@ export class Config {
 
 	constructor(config: Partial<Config> = {}) {
 		this.bot_name = config.bot_name || "";
-		this.api = config.api || TelegramBot;
+		this.api = config.api || BotApi;
 		this.webhook = config.webhook || new Webhook(localhost, "", localhost);
 		this.commands = config.commands || {};
 		this.kv = config.kv;
