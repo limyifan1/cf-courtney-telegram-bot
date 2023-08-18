@@ -1,4 +1,4 @@
-import TelegramBot from "./telegram_bot";
+import BotApi from "./bot_api";
 import { sha256, log } from "./libs";
 import { Config, Update, localhost } from "./types";
 
@@ -11,7 +11,7 @@ export default class Handler {
 
 	getResponse = async (
 		_request?: Request,
-		_bot?: TelegramBot
+		_bot?: BotApi
 	): Promise<Response> => {
 		this.getAccessKeys(this.configs).then((access_keys) =>
 			Object.keys(access_keys).forEach((key) =>
@@ -31,19 +31,19 @@ export default class Handler {
 
 	postResponse = async (
 		_request?: Request,
-		_bot?: TelegramBot
+		_bot?: BotApi
 	): Promise<Response> =>
 		_bot?.webhook.token === ""
 			? this.responses.default()
 			: _request
 			? _request
 					.json()
-					.then((update) => (_bot as TelegramBot).update(update as Update))
+					.then((update) => (_bot as BotApi).update(update as Update))
 			: this.responses.default();
 
 	responses: Record<
 		string,
-		(_request?: Request, _bot?: TelegramBot) => Promise<Response>
+		(_request?: Request, _bot?: BotApi) => Promise<Response>
 	> = {
 		GET: this.getResponse,
 		POST: this.postResponse,
