@@ -276,20 +276,20 @@ export default class TelegramBot extends TelegramApi {
 	// bot command: /recursion
 	recursion = async (update: TelegramUpdate): Promise<Response> =>
 		this.sendMessage(update.message?.chat.id ?? 0, "/recursion");
-	// .then((response) => responseToJSON(response))
-	// .then((result: { ok: boolean; result: { text: string } }) =>
-	//   this.handler.postResponse(
-	//     new Request("", {
-	//       method: "POST",
-	//       body: JSON.stringify({
-	//         message: {
-	//           text: result.result.text,
-	//           chat: { id: update.message.chat.id },
-	//         },
-	//       }),
-	//     }),
-	//     this
-	//   )
+	// .then((response) => response.json())
+	// .then((result) =>
+	// 	this.handler.postResponse(
+	// 		new Request("", {
+	// 			method: "POST",
+	// 			body: JSON.stringify({
+	// 				message: {
+	// 					text: (result as { result: { text: string } }).result.text,
+	// 					chat: { id: update.message?.chat.id },
+	// 				},
+	// 			}),
+	// 		}),
+	// 		this
+	// 	)
 	// );
 
 	// bot command: /roll
