@@ -32,7 +32,6 @@ export default class TelegramWebhook extends Webhook {
 		fetch_json(new URL(`${this.api.origin}${this.api.pathname}/deleteWebhook`));
 
 	commands: WebhookCommands = {
-		...this.commands,
 		set: this.set,
 		get: this.get,
 		delete: this.delete,
