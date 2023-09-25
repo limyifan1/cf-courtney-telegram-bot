@@ -17,7 +17,7 @@
 		"@typescript-eslint/eslint-plugin": "^6.7.2",
 		"@typescript-eslint/parser": "^6.7.2",
 		"esbuild": "^0.19.2",
-		"esbuild-plugin-glob": "^2.2.2",
+		"esbuild-plugin-glob": "^2.2.3",
 		"eslint": "^8.49.0",
 		"eslint-config-prettier": "^9.0.0",
 		"lerna": "^7.1.5",
