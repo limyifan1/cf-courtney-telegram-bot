@@ -35,6 +35,23 @@ export default class TelegramBot extends TelegramApi {
 		this.get_set = config.kv?.get_set as KVNamespace;
 	}
 
+	// bot command: /paste
+	paste = async (update: TelegramUpdate, args: string[]): Promise<Response> => {
+		const formdata = new FormData();
+		formdata.append("upload", args.join(" "));
+		const request = await fetch("https://pastebin.seanbehan.ca", {
+			method: "POST",
+			body: formdata,
+			redirect: "manual",
+		});
+		console.log(request.status);
+		const url = request.headers.get("location");
+		return this.sendMessage(
+			update.message?.chat.id ?? 0,
+			url ?? "failed to upload"
+		);
+	};
+
 	// bot command: /code
 	code = async (update: TelegramUpdate): Promise<Response> =>
 		((url) =>
