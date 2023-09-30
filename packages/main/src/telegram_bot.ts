@@ -38,7 +38,7 @@ export default class TelegramBot extends TelegramApi {
 	// bot command: /paste
 	paste = async (update: TelegramUpdate, args: string[]): Promise<Response> => {
 		const formdata = new FormData();
-		formdata.append("upload", args.join(" "));
+		formdata.append("upload", args.slice(1).join(" "));
 		const request = await fetch("https://pastebin.seanbehan.ca", {
 			method: "POST",
 			body: formdata,
