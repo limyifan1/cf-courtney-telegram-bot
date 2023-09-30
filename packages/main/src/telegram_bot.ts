@@ -44,7 +44,6 @@ export default class TelegramBot extends TelegramApi {
 			body: formdata,
 			redirect: "manual",
 		});
-		console.log(request.status);
 		const url = request.headers.get("location");
 		return this.sendMessage(
 			update.message?.chat.id ?? 0,
