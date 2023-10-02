@@ -28,6 +28,8 @@ export class Config {
 	kv: Kv;
 	url: URL;
 	handler: Handler;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	ai: any;
 
 	constructor(config: Partial<Config> = {}) {
 		this.bot_name = config.bot_name || "";
@@ -37,6 +39,7 @@ export class Config {
 		this.kv = config.kv;
 		this.url = config.url || new URL(localhost);
 		this.handler = config.handler || new Handler([]);
+		this.ai = config.ai;
 	}
 }
 

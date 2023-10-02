@@ -14,6 +14,8 @@ interface Environment {
 	SECRET_TELEGRAM_API_TOKEN2: string;
 
 	SECRET_TELEGRAM_API_TOKEN3: string;
+
+	AI: string;
 }
 
 export default {
@@ -45,10 +47,12 @@ export default {
 					"/code": TelegramCommands.code as Command,
 					"/paste": TelegramCommands.paste as Command,
 					"/commands": TelegramCommands.commandList as Command,
+					"/question": TelegramCommands.question as Command,
 					"/help": TelegramCommands.commandList as Command,
 					"/start": TelegramCommands.commandList as Command,
 				},
 				kv: { get_set: env.KV_GET_SET, uid_data: env.KV_UID_DATA },
+				ai: env.AI,
 			},
 			{
 				bot_name: "@duckduckbot",

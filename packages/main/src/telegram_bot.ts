@@ -18,11 +18,14 @@ import {
 	Commands,
 	Kv,
 } from "./types";
+import { Ai } from "@cloudflare/ai";
 
 export default class TelegramBot extends TelegramApi {
 	url: URL;
 	kv: Kv;
 	get_set: KVNamespace;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	ai: any;
 
 	constructor(config: Config) {
 		super(
@@ -33,7 +36,24 @@ export default class TelegramBot extends TelegramApi {
 		this.url = config.url;
 		this.kv = config.kv as Kv;
 		this.get_set = config.kv?.get_set as KVNamespace;
+		this.ai = config.ai;
 	}
+
+	// bot command: /question
+	question = async (
+		update: TelegramUpdate,
+		args: string[]
+	): Promise<Response> => {
+		console.log(this.ai);
+		const ai = new Ai(this.ai);
+		const prompt = args.slice(1).join(" ");
+		console.log(prompt);
+		const { response } = await ai.run("@cf/meta/llama-2-7b-chat-int8", {
+			prompt,
+		});
+		console.log(response);
+		return this.sendMessage(update.message?.chat.id ?? 0, response);
+	};
 
 	// bot command: /paste
 	paste = async (update: TelegramUpdate, args: string[]): Promise<Response> => {

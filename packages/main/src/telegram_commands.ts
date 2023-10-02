@@ -46,6 +46,11 @@ export default class TelegramCommands {
 		update: TelegramUpdate,
 		args: string[]
 	) => bot.paste(update, args);
+	static question = async (
+		bot: TelegramBot,
+		update: TelegramUpdate,
+		args: string[]
+	) => bot.question(update, args);
 	static code = async (bot: TelegramBot, update: TelegramUpdate) =>
 		bot.code(update);
 	static commandList = async (bot: TelegramBot, update: TelegramUpdate) =>

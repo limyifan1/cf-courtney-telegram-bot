@@ -5,3 +5,6 @@ workers_dev = true
 compatibility_date = "2023-06-25"
 
 build.command = "npm install && npm run build:worker"
+
+[ai]
+binding = "AI"
