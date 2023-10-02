@@ -74,6 +74,7 @@ export default {
 					"/help": TelegramCommands.commandList as Command,
 					"/start": TelegramCommands.commandList as Command,
 				},
+				ai: env.AI,
 			},
 			{
 				bot_name: "@ddggbot",
@@ -94,6 +95,7 @@ export default {
 					"/help": TelegramCommands.commandList as Command,
 					"/start": TelegramCommands.commandList as Command,
 				},
+				ai: env.AI,
 			},
 		]).handle(request),
 };

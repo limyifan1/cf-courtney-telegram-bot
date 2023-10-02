@@ -44,14 +44,14 @@ export default class TelegramBot extends TelegramApi {
 		update: TelegramUpdate,
 		args: string[]
 	): Promise<Response> => {
-		console.log(this.ai);
 		const ai = new Ai(this.ai);
-		const prompt = args.join(" ");
-		console.log(prompt);
+		let prompt = args.join(" ");
+		if (prompt === "") {
+			prompt = "no prompt specified";
+		}
 		const { response } = await ai.run("@cf/meta/llama-2-7b-chat-int8", {
 			prompt,
 		});
-		console.log(response);
 		return this.sendMessage(update.message?.chat.id ?? 0, response);
 	};
 
