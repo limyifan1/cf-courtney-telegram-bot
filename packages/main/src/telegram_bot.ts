@@ -168,9 +168,16 @@ export default class TelegramBot extends TelegramApi {
 					: this.sendMessage(update.message?.chat.id ?? 0, duckduckgo_url))(
 				query === ""
 					? "https://duckduckgo.com"
-					: addSearchParams(new URL("https://duckduckgo.com"), {
-							q: query,
-					  }).href
+					: (() => {
+							if (query[0][0] !== "/") {
+								return addSearchParams(new URL("https://duckduckgo.com"), {
+									q: query,
+								}).href;
+							}
+							return addSearchParams(new URL("https://duckduckgo.com"), {
+								q: query.split(" ").slice(1).join(" "),
+							}).href;
+					  })()
 			))(args.join(" "));
 
 	// bot command: /kanye
