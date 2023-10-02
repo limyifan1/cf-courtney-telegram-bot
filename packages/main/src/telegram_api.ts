@@ -61,8 +61,12 @@ export default class TelegramApi extends BotApi {
 						this.commands[command]
 							? this.commands[command]?.(this, update, [...text_args, ...args])
 							: log({
-									error: `command '${command}' does not exist`,
-							  }) && this.updates.default)(
+									error: `command '${command}' does not exist, using default`,
+							  }) &&
+							  this.commands["default"]?.(this, update, [
+									...text_args,
+									...args,
+							  ]))(
 						// run the command
 						this.getCommand(text_args)
 					))(

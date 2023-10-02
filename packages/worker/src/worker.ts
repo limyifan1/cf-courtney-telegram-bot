@@ -32,6 +32,7 @@ export default {
 					new URL(new URL(request.url).origin)
 				),
 				commands: {
+					default: TelegramCommands.question as Command,
 					"/ping": TelegramCommands.ping as Command,
 					"/toss": TelegramCommands.toss as Command,
 					"/epoch": TelegramCommands.epoch as Command,
@@ -65,6 +66,7 @@ export default {
 					new URL(new URL(request.url).origin)
 				),
 				commands: {
+					default: TelegramCommands.question as Command,
 					inline: TelegramCommands.duckduckgo as Command, // default inline response
 					"/duckduckgo": TelegramCommands.duckduckgo as Command,
 					"/code": TelegramCommands.code as Command,
@@ -84,6 +86,7 @@ export default {
 					new URL(new URL(request.url).origin)
 				),
 				commands: {
+					default: TelegramCommands.question as Command,
 					inline: TelegramCommands.duckduckgo as Command,
 					"/duckduckgo": TelegramCommands.duckduckgo as Command,
 					"/code": TelegramCommands.code as Command,

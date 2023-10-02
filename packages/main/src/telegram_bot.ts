@@ -46,7 +46,7 @@ export default class TelegramBot extends TelegramApi {
 	): Promise<Response> => {
 		console.log(this.ai);
 		const ai = new Ai(this.ai);
-		const prompt = args.slice(1).join(" ");
+		const prompt = args.join(" ");
 		console.log(prompt);
 		const { response } = await ai.run("@cf/meta/llama-2-7b-chat-int8", {
 			prompt,
