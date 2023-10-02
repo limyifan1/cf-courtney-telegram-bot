@@ -6,6 +6,9 @@ The original `worker.js` is the content of Nikhil John's
 https://github.com/nikhiljohn10/telegram-bot-worker which is licensed with MIT.
 My modifications are licensed under the Apache license.
 
+The first bot configuration is fully featured, and responds to all received
+messages with llama2 if a command isn't found.
+
 [![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/codebam/cf-workers-telegram-bot)
 
 To use the deploy button:
