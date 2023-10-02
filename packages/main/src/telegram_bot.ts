@@ -45,7 +45,13 @@ export default class TelegramBot extends TelegramApi {
 		args: string[]
 	): Promise<Response> => {
 		const ai = new Ai(this.ai);
-		let prompt = args.join(" ").replace(/^[^\s]*\s\s*(.*)/gm, "$1");
+		let prompt;
+		if (args[0][0] === "/") {
+			prompt = args.slice(1).join(" ");
+		} else {
+			prompt = args.join(" ");
+		}
+		console.log({ prompt });
 		if (prompt === "") {
 			prompt = "no prompt specified";
 		}
