@@ -45,7 +45,7 @@ export default class TelegramBot extends TelegramApi {
 		args: string[]
 	): Promise<Response> => {
 		const ai = new Ai(this.ai);
-		let prompt = args.join(" ");
+		let prompt = args.join(" ").replace(/^[^\s]*\s\s*(.*)/gm, "$1");
 		if (prompt === "") {
 			prompt = "no prompt specified";
 		}
@@ -165,7 +165,7 @@ export default class TelegramBot extends TelegramApi {
 					: addSearchParams(new URL("https://duckduckgo.com"), {
 							q: query,
 					  }).href
-			))(args.slice(1).join(" "));
+			))(args.join(" "));
 
 	// bot command: /kanye
 	kanye = async (update: TelegramUpdate): Promise<Response> =>

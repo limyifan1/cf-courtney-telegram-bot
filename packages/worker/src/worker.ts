@@ -66,9 +66,10 @@ export default {
 					new URL(new URL(request.url).origin)
 				),
 				commands: {
-					default: TelegramCommands.question as Command,
+					default: TelegramCommands.duckduckgo as Command,
 					inline: TelegramCommands.duckduckgo as Command, // default inline response
 					"/duckduckgo": TelegramCommands.duckduckgo as Command,
+					"/question": TelegramCommands.question as Command,
 					"/code": TelegramCommands.code as Command,
 					"/commands": TelegramCommands.commandList as Command,
 					"/help": TelegramCommands.commandList as Command,
@@ -87,9 +88,10 @@ export default {
 					new URL(new URL(request.url).origin)
 				),
 				commands: {
-					default: TelegramCommands.question as Command,
+					default: TelegramCommands.duckduckgo as Command,
 					inline: TelegramCommands.duckduckgo as Command,
 					"/duckduckgo": TelegramCommands.duckduckgo as Command,
+					"/question": TelegramCommands.question as Command,
 					"/code": TelegramCommands.code as Command,
 					"/commands": TelegramCommands.commandList as Command,
 					"/help": TelegramCommands.commandList as Command,
