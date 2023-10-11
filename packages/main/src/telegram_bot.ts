@@ -95,11 +95,14 @@ export default class TelegramBot extends TelegramApi {
 	// bot command: /clear
 	// reset the llama2 session by deleting messages from d1
 	clear = async (update: TelegramUpdate): Promise<Response> => {
-		await this.db
+		const { success } = await this.db
 			.prepare("DELETE FROM Messages WHERE userId=?")
 			.bind(update.message?.from.id)
 			.run();
-		return this.sendMessage(update.message?.chat.id ?? 0, "cleared");
+		if (success) {
+			return this.sendMessage(update.message?.chat.id ?? 0, "cleared");
+		}
+		return this.sendMessage(update.message?.chat.id ?? 0, "failed");
 	};
 
 	// bot command: /question
