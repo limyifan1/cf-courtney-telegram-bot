@@ -100,7 +100,7 @@ export default class TelegramBot extends TelegramApi {
 			.bind(update.message?.from.id)
 			.run();
 		if (success) {
-			return this.sendMessage(update.message?.chat.id ?? 0, "cleared");
+			return this.sendMessage(update.message?.chat.id ?? 0, "_");
 		}
 		return this.sendMessage(update.message?.chat.id ?? 0, "failed");
 	};
@@ -115,10 +115,10 @@ export default class TelegramBot extends TelegramApi {
 		if (args[0][0] === "/") {
 			prompt = args.slice(1).join(" ");
 		} else {
-			prompt = args.join(" ");
+			prompt = "[INST] " + args.join(" ") + "[/INST]";
 		}
 		if (prompt === "") {
-			prompt = "no prompt specified";
+			prompt = "[INST] no prompt specified [/INST]";
 		}
 
 		const { results } = await this.db
@@ -131,14 +131,6 @@ export default class TelegramBot extends TelegramApi {
 			content: col.content,
 		}));
 
-		const { success } = await this.db
-			.prepare("INSERT INTO Messages (id, userId, content) VALUES (?, ?, ?)")
-			.bind(crypto.randomUUID(), update.message?.from.id, update.message?.text)
-			.run();
-		if (!success) {
-			console.log("failed to insert data into d1");
-		}
-
 		const { response } = await ai.run("@cf/meta/llama-2-7b-chat-int8", {
 			messages: [
 				{
@@ -149,6 +141,24 @@ export default class TelegramBot extends TelegramApi {
 				{ role: "user", content: prompt },
 			],
 		});
+
+		const { success } = await this.db
+			.prepare("INSERT INTO Messages (id, userId, content) VALUES (?, ?, ?)")
+			.bind(
+				crypto.randomUUID(),
+				update.message?.from.id,
+				prompt + "[SYS] " + response + "[/SYS]"
+			)
+			.run();
+		if (!success) {
+			console.log("failed to insert data into d1");
+		}
+
+		if (response === "") {
+			this.clear(update);
+			return this.question(update, args);
+		} // sometimes llama2 doesn't respond when given lots of system prompts
+
 		return this.sendMessage(update.message?.chat.id ?? 0, response);
 	};
 
