@@ -30,6 +30,8 @@ export class Config {
 	handler: Handler;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	ai: any;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	db: any;
 
 	constructor(config: Partial<Config> = {}) {
 		this.bot_name = config.bot_name || "";
@@ -40,6 +42,7 @@ export class Config {
 		this.url = config.url || new URL(localhost);
 		this.handler = config.handler || new Handler([]);
 		this.ai = config.ai;
+		this.db = config.db;
 	}
 }
 

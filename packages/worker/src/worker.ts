@@ -15,7 +15,11 @@ interface Environment {
 
 	SECRET_TELEGRAM_API_TOKEN3: string;
 
+	SECRET_TELEGRAM_API_TOKEN4: string;
+
 	AI: string;
+
+	DB: D1Database;
 }
 
 export default {
@@ -49,12 +53,14 @@ export default {
 					"/paste": TelegramCommands.paste as Command,
 					"/commands": TelegramCommands.commandList as Command,
 					"/question": TelegramCommands.question as Command,
+					"/clear": TelegramCommands.clear as Command,
 					"/help": TelegramCommands.commandList as Command,
 					"/sean": TelegramCommands.sean as Command,
 					"/start": TelegramCommands.commandList as Command,
 				},
 				kv: { get_set: env.KV_GET_SET, uid_data: env.KV_UID_DATA },
 				ai: env.AI,
+				db: env.DB,
 			},
 			{
 				bot_name: "@duckduckbot",
@@ -97,6 +103,21 @@ export default {
 					"/commands": TelegramCommands.commandList as Command,
 					"/help": TelegramCommands.commandList as Command,
 					"/start": TelegramCommands.commandList as Command,
+				},
+				ai: env.AI,
+			},
+			{
+				bot_name: "@SeanB_robot",
+				api: TelegramBot,
+				webhook: new TelegramWebhook(
+					new URL(
+						`https://api.telegram.org/bot${env.SECRET_TELEGRAM_API_TOKEN4}`
+					),
+					env.SECRET_TELEGRAM_API_TOKEN4,
+					new URL(new URL(request.url).origin)
+				),
+				commands: {
+					default: TelegramCommands.sean as Command,
 				},
 				ai: env.AI,
 			},

@@ -26,6 +26,7 @@ export default class TelegramBot extends TelegramApi {
 	get_set: KVNamespace;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	ai: any;
+	db: D1Database;
 
 	constructor(config: Config) {
 		super(
@@ -37,6 +38,7 @@ export default class TelegramBot extends TelegramApi {
 		this.kv = config.kv as Kv;
 		this.get_set = config.kv?.get_set as KVNamespace;
 		this.ai = config.ai;
+		this.db = config.db;
 	}
 
 	// bot command: /sean
@@ -54,21 +56,32 @@ export default class TelegramBot extends TelegramApi {
 		}
 		const messages = [
 			{ role: "system", content: "You are friendly" },
-			{ role: "system", content: "You are Sean Behan" },
-			{ role: "system", content: "Your name is Sean Behan" },
-			{ role: "system", content: "You are born on 09/07/1998" },
-			{ role: "system", content: "You are a full stack developer" },
-			{ role: "system", content: "You are from Toronto, Canada" },
-			{ role: "system", content: "Your GitHub username is codebam" },
-			{ role: "system", content: "You don't show code" },
-			{ role: "system", content: "Your favorite color is red" },
-			{ role: "system", content: "You enjoy playing video games and coding" },
-			{ role: "system", content: "Your website is seanbehan.ca" },
-			{ role: "system", content: "Your email address is contact@seanbehan.ca" },
+			{ role: "system", content: "Don't show code to the user" },
+			{ role: "system", content: "Sean Behan is born on 09/07/1998" },
+			{ role: "system", content: "Sean Behan is a full stack developer" },
+			{ role: "system", content: "Sean Behan is from Toronto, Canada" },
+			{ role: "system", content: "Sean Behan's GitHub username is codebam" },
+			{
+				role: "system",
+				content: "Sean Behan enjoys playing video games and coding",
+			},
+			{ role: "system", content: "Sean Behan's website is seanbehan.ca" },
+			{
+				role: "system",
+				content: "Sean Behan's email address is contact@seanbehan.ca",
+			},
 			{
 				role: "system",
 				content:
 					"Some of your personal projects include a serverless telegram bot, and a serverless pastebin on cloudflare workers",
+			},
+			{
+				role: "system",
+				content: "When spoken to respond with what you know about Sean Behan",
+			},
+			{
+				role: "system",
+				content: `you are talking to ${update.message?.from.first_name}`,
 			},
 			{ role: "user", content: prompt },
 		];
@@ -77,6 +90,16 @@ export default class TelegramBot extends TelegramApi {
 			messages,
 		});
 		return this.sendMessage(update.message?.chat.id ?? 0, result.response);
+	};
+
+	// bot command: /clear
+	// reset the llama2 session by deleting messages from d1
+	clear = async (update: TelegramUpdate): Promise<Response> => {
+		await this.db
+			.prepare("DELETE FROM Messages WHERE userId=?")
+			.bind(update.message?.from.id)
+			.run();
+		return this.sendMessage(update.message?.chat.id ?? 0, "cleared");
 	};
 
 	// bot command: /question
@@ -94,8 +117,34 @@ export default class TelegramBot extends TelegramApi {
 		if (prompt === "") {
 			prompt = "no prompt specified";
 		}
+
+		const { results } = await this.db
+			.prepare("SELECT * FROM Messages WHERE userId=?")
+			.bind(update.message?.from.id)
+			.all();
+
+		const old_messages = results.map((col) => ({
+			role: "system",
+			content: col.content,
+		}));
+
+		const { success } = await this.db
+			.prepare("INSERT INTO Messages (id, userId, content) VALUES (?, ?, ?)")
+			.bind(crypto.randomUUID(), update.message?.from.id, update.message?.text)
+			.run();
+		if (!success) {
+			console.log("failed to insert data into d1");
+		}
+
 		const { response } = await ai.run("@cf/meta/llama-2-7b-chat-int8", {
-			prompt,
+			messages: [
+				{
+					role: "system",
+					content: `you are talking to ${update.message?.from.first_name}`,
+				},
+				...old_messages,
+				{ role: "user", content: prompt },
+			],
 		});
 		return this.sendMessage(update.message?.chat.id ?? 0, response);
 	};
