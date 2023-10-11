@@ -83,6 +83,7 @@ export default {
 					"/start": TelegramCommands.commandList as Command,
 				},
 				ai: env.AI,
+				db: env.DB,
 			},
 			{
 				bot_name: "@ddggbot",
@@ -105,6 +106,7 @@ export default {
 					"/start": TelegramCommands.commandList as Command,
 				},
 				ai: env.AI,
+				db: env.DB,
 			},
 			{
 				bot_name: "@SeanB_robot",
@@ -117,9 +119,10 @@ export default {
 					new URL(new URL(request.url).origin)
 				),
 				commands: {
-					default: TelegramCommands.sean as Command,
+					default: TelegramCommands.question as Command,
 				},
 				ai: env.AI,
+				db: env.DB,
 			},
 		]).handle(request),
 };
