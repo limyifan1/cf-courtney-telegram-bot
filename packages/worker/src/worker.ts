@@ -50,6 +50,7 @@ export default {
 					"/commands": TelegramCommands.commandList as Command,
 					"/question": TelegramCommands.question as Command,
 					"/help": TelegramCommands.commandList as Command,
+					"/sean": TelegramCommands.sean as Command,
 					"/start": TelegramCommands.commandList as Command,
 				},
 				kv: { get_set: env.KV_GET_SET, uid_data: env.KV_UID_DATA },

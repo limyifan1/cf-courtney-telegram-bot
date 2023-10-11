@@ -39,6 +39,46 @@ export default class TelegramBot extends TelegramApi {
 		this.ai = config.ai;
 	}
 
+	// bot command: /sean
+	sean = async (update: TelegramUpdate, args: string[]): Promise<Response> => {
+		const ai = new Ai(this.ai);
+		let prompt;
+		if (args[0][0] === "/") {
+			prompt = args.slice(1).join(" ");
+		} else {
+			prompt = args.join(" ");
+		}
+		console.log({ prompt });
+		if (prompt === "") {
+			prompt = "no prompt specified";
+		}
+		const messages = [
+			{ role: "system", content: "You are friendly" },
+			{ role: "system", content: "You are Sean Behan" },
+			{ role: "system", content: "Your name is Sean Behan" },
+			{ role: "system", content: "You are born on 09/07/1998" },
+			{ role: "system", content: "You are a full stack developer" },
+			{ role: "system", content: "You are from Toronto, Canada" },
+			{ role: "system", content: "Your GitHub username is codebam" },
+			{ role: "system", content: "You don't show code" },
+			{ role: "system", content: "Your favorite color is red" },
+			{ role: "system", content: "You enjoy playing video games and coding" },
+			{ role: "system", content: "Your website is seanbehan.ca" },
+			{ role: "system", content: "Your email address is contact@seanbehan.ca" },
+			{
+				role: "system",
+				content:
+					"Some of your personal projects include a serverless telegram bot, and a serverless pastebin on cloudflare workers",
+			},
+			{ role: "user", content: prompt },
+		];
+
+		const result = await ai.run("@cf/meta/llama-2-7b-chat-int8", {
+			messages,
+		});
+		return this.sendMessage(update.message?.chat.id ?? 0, result.response);
+	};
+
 	// bot command: /question
 	question = async (
 		update: TelegramUpdate,
@@ -51,7 +91,6 @@ export default class TelegramBot extends TelegramApi {
 		} else {
 			prompt = args.join(" ");
 		}
-		console.log({ prompt });
 		if (prompt === "") {
 			prompt = "no prompt specified";
 		}
