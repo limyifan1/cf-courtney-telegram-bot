@@ -115,10 +115,10 @@ export default class TelegramBot extends TelegramApi {
 		if (args[0][0] === "/") {
 			prompt = args.slice(1).join(" ");
 		} else {
-			prompt = "[INST] " + args.join(" ") + "[/INST]";
+			prompt = "[INST] " + args.join(" ") + " [/INST]";
 		}
 		if (prompt === "") {
-			prompt = "[INST] no prompt specified [/INST]";
+			prompt = "[INST] [/INST]";
 		}
 
 		const { results } = await this.db
@@ -147,7 +147,7 @@ export default class TelegramBot extends TelegramApi {
 			.bind(
 				crypto.randomUUID(),
 				update.message?.from.id,
-				prompt + "[SYS] " + response + "[/SYS]"
+				prompt + "[SYS] " + response + " [/SYS]"
 			)
 			.run();
 		if (!success) {
