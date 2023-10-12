@@ -133,11 +133,11 @@ export default class TelegramBot extends TelegramApi {
 
 		const { response } = await ai.run("@cf/meta/llama-2-7b-chat-int8", {
 			messages: [
-				...old_messages,
 				{
 					role: "system",
 					content: `you are talking to ${update.message?.from.first_name}`,
 				},
+				...old_messages,
 				{ role: "user", content: prompt },
 			],
 		});
