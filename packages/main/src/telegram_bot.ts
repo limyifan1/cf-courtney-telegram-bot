@@ -27,6 +27,7 @@ export default class TelegramBot extends TelegramApi {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	ai: any;
 	db: D1Database;
+	bot_name: string;
 
 	constructor(config: Config) {
 		super(
@@ -39,6 +40,7 @@ export default class TelegramBot extends TelegramApi {
 		this.get_set = config.kv?.get_set as KVNamespace;
 		this.ai = config.ai;
 		this.db = config.db;
+		this.bot_name = config.bot_name;
 	}
 
 	// bot command: /sean
@@ -135,11 +137,15 @@ export default class TelegramBot extends TelegramApi {
 			messages: [
 				{
 					role: "system",
-					content: `your name is Tux`,
+					content: `your name is ${this.bot_name}`,
 				},
 				{
 					role: "system",
 					content: `you are talking to ${update.message?.from.first_name}`,
+				},
+				{
+					role: "system",
+					content: `your source code is at https://github.com/codebam/cf-workers-telegram-bot`,
 				},
 				...old_messages,
 				{ role: "user", content: prompt },
@@ -151,7 +157,7 @@ export default class TelegramBot extends TelegramApi {
 			.bind(
 				crypto.randomUUID(),
 				update.message?.from.id,
-				"[INST] " + prompt + " [/INST]" + "\n" + "[SYS] " + response + " [/SYS]"
+				"[INST] " + prompt + " [/INST]" + "\n" + response
 			)
 			.run();
 		if (!success) {

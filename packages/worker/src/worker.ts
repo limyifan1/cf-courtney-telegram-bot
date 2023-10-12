@@ -26,7 +26,7 @@ export default {
 	fetch: async (request: Request, env: Environment) =>
 		new Handler([
 			{
-				bot_name: "cf-workers-telegram-bot",
+				bot_name: "@TuxRobot",
 				api: TelegramBot,
 				webhook: new TelegramWebhook(
 					new URL(
