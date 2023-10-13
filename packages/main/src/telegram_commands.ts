@@ -19,8 +19,6 @@ export default class TelegramCommands {
 		bot.joke(update);
 	static dog = async (bot: TelegramBot, update: TelegramUpdate) =>
 		bot.dog(update);
-	static cat = async (bot: TelegramBot, update: TelegramUpdate) =>
-		bot.cat(update);
 	static roll = async (
 		bot: TelegramBot,
 		update: TelegramUpdate,
