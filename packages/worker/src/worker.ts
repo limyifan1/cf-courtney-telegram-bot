@@ -120,6 +120,8 @@ export default {
 				),
 				commands: {
 					default: TelegramCommands.question as Command,
+					"/clear": TelegramCommands.clear as Command,
+					"/start": TelegramCommands.commandList as Command,
 				},
 				ai: env.AI,
 				db: env.DB,
