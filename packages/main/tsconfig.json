@@ -2,6 +2,7 @@
 	"include": ["src/**/*"],
 	"compilerOptions": {
 		"strict": true,
+		"noImplicitAny": false,
 		"target": "esnext",
 		"module": "esnext",
 		"lib": ["esnext"],
