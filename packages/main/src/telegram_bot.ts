@@ -112,6 +112,9 @@ export default class TelegramBot extends TelegramApi {
 		update: TelegramUpdate,
 		args: string[]
 	): Promise<Response> => {
+		if (this.ai === undefined) {
+			return new Response("ok");
+		}
 		const ai = new Ai(this.ai);
 		let prompt;
 		if (args[0][0] === "/") {
