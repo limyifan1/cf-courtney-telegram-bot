@@ -9,6 +9,9 @@ My modifications are licensed under the Apache license.
 The first bot configuration is fully featured, and responds to all received
 messages with llama2 if a command isn't found.
 
+To get continuous conversation with llama2 working make sure you add a database
+to your wrangler.toml and initailize it with the schema.sql
+
 [![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/codebam/cf-workers-telegram-bot)
 
 To use the deploy button:
