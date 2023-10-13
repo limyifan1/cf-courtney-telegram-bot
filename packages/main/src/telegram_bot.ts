@@ -126,15 +126,22 @@ export default class TelegramBot extends TelegramApi {
 			prompt = "";
 		}
 
-		const { results } = await this.db
-			.prepare("SELECT * FROM Messages WHERE userId=?")
-			.bind(update.message?.from.id)
-			.all();
+		let _results;
+		if (this.db) {
+			_results = await this.db
+				.prepare("SELECT * FROM Messages WHERE userId=?")
+				.bind(update.message?.from.id)
+				.all();
+		}
+		const results = _results?.results;
 
-		const old_messages = results.map((col) => ({
-			role: "system",
-			content: col.content,
-		}));
+		let old_messages;
+		if (results) {
+			old_messages = results.map((col) => ({
+				role: "system",
+				content: col.content,
+			}));
+		}
 
 		const { response } = await ai.run("@cf/meta/llama-2-7b-chat-int8", {
 			messages: [
@@ -150,21 +157,28 @@ export default class TelegramBot extends TelegramApi {
 					role: "system",
 					content: `your source code is at https://github.com/codebam/cf-workers-telegram-bot`,
 				},
-				...old_messages,
+				...(() => {
+					if (old_messages) {
+						return old_messages;
+					}
+					return [];
+				})(),
 				{ role: "user", content: prompt },
 			],
 		});
 
-		const { success } = await this.db
-			.prepare("INSERT INTO Messages (id, userId, content) VALUES (?, ?, ?)")
-			.bind(
-				crypto.randomUUID(),
-				update.message?.from.id,
-				"[INST] " + prompt + " [/INST]" + "\n" + response
-			)
-			.run();
-		if (!success) {
-			console.log("failed to insert data into d1");
+		if (this.db) {
+			const { success } = await this.db
+				.prepare("INSERT INTO Messages (id, userId, content) VALUES (?, ?, ?)")
+				.bind(
+					crypto.randomUUID(),
+					update.message?.from.id,
+					"[INST] " + prompt + " [/INST]" + "\n" + response
+				)
+				.run();
+			if (!success) {
+				console.log("failed to insert data into d1");
+			}
 		}
 
 		if (response === "") {
