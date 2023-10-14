@@ -170,7 +170,6 @@ export default class TelegramBot extends TelegramApi {
 		const _response = response
 			.replace(/\[\/INST(S|)\]/, "")
 			.replace(/<<\/SYS>>/, "");
-		console.log(_response);
 
 		if (this.db) {
 			const { success } = await this.db
