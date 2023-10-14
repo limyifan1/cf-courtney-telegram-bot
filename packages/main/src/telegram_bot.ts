@@ -167,13 +167,18 @@ export default class TelegramBot extends TelegramApi {
 			],
 		});
 
+		const _response = response
+			.replace(/\[\/INST(S|)\]/, "")
+			.replace(/<<\/SYS>>/, "");
+		console.log(_response);
+
 		if (this.db) {
 			const { success } = await this.db
 				.prepare("INSERT INTO Messages (id, userId, content) VALUES (?, ?, ?)")
 				.bind(
 					crypto.randomUUID(),
 					update.message?.from.id,
-					"[INST] " + prompt + " [/INST]" + "\n" + response
+					"[INST] " + prompt + " [/INST]" + "\n" + _response
 				)
 				.run();
 			if (!success) {
@@ -181,12 +186,12 @@ export default class TelegramBot extends TelegramApi {
 			}
 		}
 
-		if (response === "") {
+		if (_response === "") {
 			this.clear(update);
 			return this.question(update, args);
 		} // sometimes llama2 doesn't respond when given lots of system prompts
 
-		return this.sendMessage(update.message?.chat.id ?? 0, response);
+		return this.sendMessage(update.message?.chat.id ?? 0, _response);
 	};
 
 	// bot command: /paste
