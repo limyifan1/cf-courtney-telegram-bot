@@ -39,10 +39,6 @@ export default class Handler {
 			? _request
 					.json()
 					.then((update) => (_bot as BotApi).update(update as Update))
-					.catch((error) => {
-						console.error({ error });
-						return this.responses.default();
-					})
 			: this.responses.default();
 
 	responses: Record<
