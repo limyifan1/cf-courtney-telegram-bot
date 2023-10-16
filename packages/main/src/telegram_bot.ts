@@ -399,39 +399,6 @@ export default class TelegramBot extends TelegramApi {
 			Math.floor(Date.now() / 1000).toString()
 		);
 
-	// bot command: /get
-	_get = async (update: TelegramUpdate, args: string[]): Promise<Response> =>
-		((key) =>
-			this.get_set
-				.get(key)
-				.then((value) =>
-					update.inline_query
-						? this.answerInlineQuery(
-								update.inline_query.id,
-								[new TelegramInlineQueryResultArticle(value ?? "")],
-								0
-						  )
-						: this.sendMessage(update.message?.chat.id ?? 0, value ?? "")
-				))(args[1]);
-
-	// bot command: /set
-	_set = async (update: TelegramUpdate, args: string[]): Promise<Response> => {
-		const key = args[1];
-		const value = args.slice(2).join(" ");
-		const message = `set ${key} to ${value}`;
-		this.get_set.put(key, value).then(() => {
-			if (update.inline_query) {
-				return this.answerInlineQuery(
-					update.inline_query.id,
-					[new TelegramInlineQueryResultArticle(message)],
-					0
-				);
-			}
-			return this.sendMessage(update.message?.chat.id ?? 0, message);
-		});
-		return new Response();
-	};
-
 	_average = (numbers: number[]): number =>
 		parseFloat(
 			(

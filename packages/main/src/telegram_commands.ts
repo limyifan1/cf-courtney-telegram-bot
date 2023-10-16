@@ -24,16 +24,6 @@ export default class TelegramCommands {
 		update: TelegramUpdate,
 		args: string[]
 	) => bot.roll(update, args);
-	static _get = async (
-		bot: TelegramBot,
-		update: TelegramUpdate,
-		args: string[]
-	) => bot._get(update, args);
-	static _set = async (
-		bot: TelegramBot,
-		update: TelegramUpdate,
-		args: string[]
-	) => bot._set(update, args);
 	static duckduckgo = async (
 		bot: TelegramBot,
 		update: TelegramUpdate,
