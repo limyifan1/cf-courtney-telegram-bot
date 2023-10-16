@@ -36,13 +36,12 @@ export default class Handler {
 		_bot?.webhook.token === ""
 			? this.responses.default()
 			: _request
-			? _request
-					.json()
-					.then((update) => (_bot as BotApi).update(update as Update))
-					.catch((error) => {
+			? _request.json().then((update) =>
+					(_bot as BotApi).update(update as Update).catch((error) => {
 						console.error({ error });
 						return this.responses.default();
 					})
+			  )
 			: this.responses.default();
 
 	responses: Record<
