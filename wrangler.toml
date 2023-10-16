@@ -13,8 +13,3 @@ binding = "AI"
 binding = "DB"
 database_name = "llama2"
 database_id = "e24eb37b-6b13-4e84-b1af-63de0dedcc6d"
-
-[[d1_databases]]
-binding = "MODELS_DB"
-database_name = "models"
-database_id = "188aa684-84a8-46d8-9ae4-fe9e1b80bd8f"
