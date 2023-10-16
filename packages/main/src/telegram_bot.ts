@@ -116,14 +116,14 @@ export default class TelegramBot extends TelegramApi {
 			return new Response("ok");
 		}
 		const ai = new Ai(this.ai);
-		let prompt;
+		let _prompt: string;
 		if (args[0][0] === "/") {
-			prompt = args.slice(1).join(" ");
+			_prompt = args.slice(1).join(" ");
 		} else {
-			prompt = args.join(" ");
+			_prompt = args.join(" ");
 		}
-		if (prompt === "") {
-			prompt = "";
+		if (_prompt === "") {
+			_prompt = "";
 		}
 
 		let _results;
@@ -139,7 +139,7 @@ export default class TelegramBot extends TelegramApi {
 		if (results) {
 			old_messages = results.map((col) => ({
 				role: "system",
-				content: col.content,
+				content: col.content as string,
 			}));
 		}
 
@@ -163,7 +163,7 @@ export default class TelegramBot extends TelegramApi {
 					}
 					return [];
 				})(),
-				{ role: "user", content: prompt },
+				{ role: "user", content: _prompt },
 			],
 		});
 
@@ -177,7 +177,7 @@ export default class TelegramBot extends TelegramApi {
 				.bind(
 					crypto.randomUUID(),
 					update.message?.from.id,
-					"[INST] " + prompt + " [/INST]" + "\n" + _response
+					"[INST] " + _prompt + " [/INST]" + "\n" + _response
 				)
 				.run();
 			if (!success) {
