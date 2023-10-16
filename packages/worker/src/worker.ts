@@ -123,5 +123,10 @@ export default {
 				ai: env.AI,
 				db: env.DB,
 			},
-		]).handle(request),
+		])
+			.handle(request)
+			.catch((err) => {
+				console.log({ err });
+				return new Response("ok");
+			}),
 };
