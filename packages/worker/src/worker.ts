@@ -37,6 +37,7 @@ export default {
 				),
 				commands: {
 					default: TelegramCommands.question as Command,
+					inline: TelegramCommands.question as Command,
 					"/ping": TelegramCommands.ping as Command,
 					"/toss": TelegramCommands.toss as Command,
 					"/epoch": TelegramCommands.epoch as Command,

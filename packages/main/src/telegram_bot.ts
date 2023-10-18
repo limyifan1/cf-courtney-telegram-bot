@@ -130,7 +130,11 @@ export default class TelegramBot extends TelegramApi {
 		if (this.db) {
 			_results = await this.db
 				.prepare("SELECT * FROM Messages WHERE userId=?")
-				.bind(update.message?.from.id)
+				.bind(
+					update.inline_query
+						? update.inline_query.from.id
+						: update.message?.from.id
+				)
 				.all();
 		}
 		const results = _results?.results;
@@ -176,7 +180,9 @@ export default class TelegramBot extends TelegramApi {
 				.prepare("INSERT INTO Messages (id, userId, content) VALUES (?, ?, ?)")
 				.bind(
 					crypto.randomUUID(),
-					update.message?.from.id,
+					update.inline_query
+						? update.inline_query.from.id
+						: update.message?.from.id,
 					"[INST] " + _prompt + " [/INST]" + "\n" + _response
 				)
 				.run();
@@ -190,6 +196,11 @@ export default class TelegramBot extends TelegramApi {
 			return this.question(update, args);
 		} // sometimes llama2 doesn't respond when given lots of system prompts
 
+		if (update.inline_query) {
+			return this.answerInlineQuery(update.inline_query.id, [
+				new TelegramInlineQueryResultArticle(_response),
+			]);
+		}
 		return this.sendMessage(update.message?.chat.id ?? 0, _response);
 	};
 
