@@ -99,9 +99,18 @@ export default class TelegramBot extends TelegramApi {
 	clear = async (update: TelegramUpdate): Promise<Response> => {
 		const { success } = await this.db
 			.prepare("DELETE FROM Messages WHERE userId=?")
-			.bind(update.message?.from.id)
+			.bind(
+				update.inline_query
+					? update.inline_query.from.id
+					: update.message?.from.id
+			)
 			.run();
 		if (success) {
+			if (update.inline_query) {
+				return this.answerInlineQuery(update.inline_query.id, [
+					new TelegramInlineQueryResultArticle("_"),
+				]);
+			}
 			return this.sendMessage(update.message?.chat.id ?? 0, "_");
 		}
 		return this.sendMessage(update.message?.chat.id ?? 0, "failed");
