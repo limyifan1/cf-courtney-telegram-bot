@@ -135,54 +135,51 @@ export default class TelegramBot extends TelegramApi {
 			_prompt = "";
 		}
 
-		let _results;
-		if (this.db) {
-			_results = await this.db
-				.prepare("SELECT * FROM Messages WHERE userId=?")
-				.bind(
-					update.inline_query
-						? update.inline_query.from.id
-						: update.message?.from.id
-				)
-				.all();
-		}
-		const results = _results?.results;
+		const results = await (async () => {
+			if (this.db) {
+				const { results } = await this.db
+					.prepare("SELECT * FROM Messages WHERE userId=?")
+					.bind(
+						update.inline_query
+							? update.inline_query.from.id
+							: update.message?.from.id
+					)
+					.all();
+				return results;
+			}
+		})();
 
-		let old_messages;
-		if (results) {
-			old_messages = results.map((col) => ({
-				role: "system",
-				content: col.content as string,
-			}));
-		}
+		const old_messages: { role: string; content: string }[] = (() => {
+			if (results) {
+				return results.map((col) => ({
+					role: "system",
+					content: col.content as string,
+				}));
+			}
+			return [];
+		})();
 
-		const { response } = await ai.run("@cf/meta/llama-2-7b-chat-int8", {
-			messages: [
-				{
-					role: "system",
-					content: `your name is ${this.bot_name}`,
-				},
-				{
-					role: "system",
-					content: `you are talking to ${update.message?.from.first_name}`,
-				},
-				{
-					role: "system",
-					content: `your source code is at https://github.com/codebam/cf-workers-telegram-bot`,
-				},
-				...(() => {
-					if (old_messages) {
-						return old_messages;
-					}
-					return [];
-				})(),
-				{ role: "user", content: _prompt },
-			],
-		});
-
-		const _response = response
-			.replace(/\[\/INST(S|)\]/, "")
-			.replace(/<<\/SYS>>/, "");
+		const response = await (async () => {
+			const { response } = await ai.run("@cf/meta/llama-2-7b-chat-int8", {
+				messages: [
+					{
+						role: "system",
+						content: `your name is ${this.bot_name}`,
+					},
+					{
+						role: "system",
+						content: `you are talking to ${update.message?.from.first_name}`,
+					},
+					{
+						role: "system",
+						content: `your source code is at https://github.com/codebam/cf-workers-telegram-bot`,
+					},
+					...old_messages,
+					{ role: "user", content: _prompt },
+				],
+			});
+			return response.replace(/\[\/INST(S|)\]/, "").replace(/<<\/SYS>>/, "");
+		})();
 
 		if (this.db) {
 			const { success } = await this.db
@@ -192,7 +189,7 @@ export default class TelegramBot extends TelegramApi {
 					update.inline_query
 						? update.inline_query.from.id
 						: update.message?.from.id,
-					"[INST] " + _prompt + " [/INST]" + "\n" + _response
+					"[INST] " + _prompt + " [/INST]" + "\n" + response
 				)
 				.run();
 			if (!success) {
@@ -200,17 +197,17 @@ export default class TelegramBot extends TelegramApi {
 			}
 		}
 
-		if (_response === "") {
+		if (response === "") {
 			this.clear(update);
 			return this.question(update, args);
 		} // sometimes llama2 doesn't respond when given lots of system prompts
 
 		if (update.inline_query) {
 			return this.answerInlineQuery(update.inline_query.id, [
-				new TelegramInlineQueryResultArticle(_response),
+				new TelegramInlineQueryResultArticle(response),
 			]);
 		}
-		return this.sendMessage(update.message?.chat.id ?? 0, _response);
+		return this.sendMessage(update.message?.chat.id ?? 0, response);
 	};
 
 	// bot command: /paste
