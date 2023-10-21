@@ -1,53 +1,26 @@
-import TelegramBot from "./telegram_bot";
-import { TelegramUpdate } from "./types";
+import { TelegramCommand } from "./types";
 
 export default class TelegramCommands {
-	static ping = async (
-		bot: TelegramBot,
-		update: TelegramUpdate,
-		args: string[]
-	) => bot.ping(update, args);
-	static toss = async (bot: TelegramBot, update: TelegramUpdate) =>
-		bot.toss(update);
-	static epoch = async (bot: TelegramBot, update: TelegramUpdate) =>
-		bot.epoch(update);
-	static kanye = async (bot: TelegramBot, update: TelegramUpdate) =>
-		bot.kanye(update);
-	static bored = async (bot: TelegramBot, update: TelegramUpdate) =>
-		bot.bored(update);
-	static joke = async (bot: TelegramBot, update: TelegramUpdate) =>
-		bot.joke(update);
-	static dog = async (bot: TelegramBot, update: TelegramUpdate) =>
-		bot.dog(update);
-	static roll = async (
-		bot: TelegramBot,
-		update: TelegramUpdate,
-		args: string[]
-	) => bot.roll(update, args);
-	static duckduckgo = async (
-		bot: TelegramBot,
-		update: TelegramUpdate,
-		args: string[]
-	) => bot.duckduckgo(update, args);
-	static paste = async (
-		bot: TelegramBot,
-		update: TelegramUpdate,
-		args: string[]
-	) => bot.paste(update, args);
-	static question = async (
-		bot: TelegramBot,
-		update: TelegramUpdate,
-		args: string[]
-	) => bot.question(update, args);
-	static sean = async (
-		bot: TelegramBot,
-		update: TelegramUpdate,
-		args: string[]
-	) => bot.sean(update, args);
-	static clear = async (bot: TelegramBot, update: TelegramUpdate) =>
-		bot.clear(update);
-	static code = async (bot: TelegramBot, update: TelegramUpdate) =>
-		bot.code(update);
-	static commandList = async (bot: TelegramBot, update: TelegramUpdate) =>
+	static ping: TelegramCommand = async (bot, update, args) =>
+		bot.ping(update, args);
+	static toss: TelegramCommand = async (bot, update) => bot.toss(update);
+	static epoch: TelegramCommand = async (bot, update) => bot.epoch(update);
+	static kanye: TelegramCommand = async (bot, update) => bot.kanye(update);
+	static bored: TelegramCommand = async (bot, update) => bot.bored(update);
+	static joke: TelegramCommand = async (bot, update) => bot.joke(update);
+	static dog: TelegramCommand = async (bot, update) => bot.dog(update);
+	static roll: TelegramCommand = async (bot, update, args) =>
+		bot.roll(update, args);
+	static duckduckgo: TelegramCommand = async (bot, update, args) =>
+		bot.duckduckgo(update, args);
+	static paste: TelegramCommand = async (bot, update, args) =>
+		bot.paste(update, args);
+	static question: TelegramCommand = async (bot, update, args) =>
+		bot.question(update, args);
+	static sean: TelegramCommand = async (bot, update, args: string[]) =>
+		bot.sean(update, args);
+	static clear: TelegramCommand = async (bot, update) => bot.clear(update);
+	static code: TelegramCommand = async (bot, update) => bot.code(update);
+	static commandList: TelegramCommand = async (bot, update) =>
 		bot.commandList(update);
 }

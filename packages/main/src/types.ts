@@ -1,19 +1,19 @@
 import BotApi from "./bot_api";
 import Handler from "./handler";
-import TelegramApi from "./telegram_api";
+import TelegramBot from "./telegram_bot";
 import Webhook from "./webhook";
 export { Webhook };
 
 export type Command = (
 	bot: BotApi,
 	update: Update,
-	args?: string[]
+	args: string[]
 ) => Promise<Response>;
 
 export type TelegramCommand = (
-	bot: TelegramApi,
+	bot: TelegramBot,
 	update: TelegramUpdate,
-	args?: string[]
+	args: string[]
 ) => Promise<Response>;
 
 export type Commands = Record<string, Command>;
