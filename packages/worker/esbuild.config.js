@@ -5,7 +5,7 @@ esbuild.build({
 	entryPoints: ["dist/worker/src/worker.js"],
 	bundle: true,
 	format: "esm",
-	minify: true,
+	// minify: true,
 	outfile: "dist/worker/src/worker.mjs",
 	plugins: [babel()],
 });
