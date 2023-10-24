@@ -5,6 +5,6 @@
     ]
   ],
   "targets": {
-    "chrome": 118
+    "browsers": "last 1 versions"
   }
 }
