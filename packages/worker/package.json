@@ -7,7 +7,7 @@
 	"module": "./dist/worker.mjs",
 	"type": "module",
 	"scripts": {
-		"build": "tsc --project tsconfig.json && esbuild dist/worker/src/worker.js --format=esm --minify --bundle --outfile=dist/worker/src/worker.mjs",
+		"build": "tsc --project tsconfig.json && node esbuild.config.js",
 		"lint": "eslint src"
 	},
 	"author": "codebam",
@@ -17,6 +17,7 @@
 		"@typescript-eslint/eslint-plugin": "^6.7.5",
 		"@typescript-eslint/parser": "^6.7.5",
 		"esbuild": "^0.19.4",
+		"esbuild-plugin-babel": "^0.2.3",
 		"esbuild-plugin-glob": "^2.2.3",
 		"eslint": "^8.51.0",
 		"eslint-config-prettier": "^9.0.0",
