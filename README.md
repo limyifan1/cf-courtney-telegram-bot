@@ -36,6 +36,7 @@ To fork this repo and use wrangler:
 - `wrangler secret put SECRET_TELEGRAM_API_TOKEN` and set it to your telegram
   bot token
 - `wrangler d1 create llama2`
+- `wrangler d1 execute llama2 --file ./schema.sql`
 - put the database block from the command in your wrangler.toml
 - `wrangler deploy`
 - Done!
