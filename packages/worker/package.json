@@ -14,15 +14,15 @@
 	"license": "Apache-2.0",
 	"devDependencies": {
 		"@babel/preset-env": "^7.23.2",
-		"@cloudflare/workers-types": "^4.20231010.0",
-		"@typescript-eslint/eslint-plugin": "^6.7.5",
-		"@typescript-eslint/parser": "^6.7.5",
-		"esbuild": "^0.19.4",
+		"@cloudflare/workers-types": "^4.20231025.0",
+		"@typescript-eslint/eslint-plugin": "^6.9.0",
+		"@typescript-eslint/parser": "^6.9.0",
+		"esbuild": "^0.19.5",
 		"esbuild-plugin-babel": "^0.2.3",
 		"esbuild-plugin-glob": "^2.2.3",
-		"eslint": "^8.51.0",
+		"eslint": "^8.52.0",
 		"eslint-config-prettier": "^9.0.0",
-		"lerna": "^7.3.1",
+		"lerna": "^7.4.1",
 		"prettier": "^3.0.3",
 		"typescript": "^5.2.2"
 	}
