@@ -36,7 +36,7 @@ To fork this repo and use wrangler:
   bot token
 - `wrangler d1 create llama2`
 - put the database block from the command in your wrangler.toml
-- `wrangler publish`
+- `wrangler deploy`
 - Done!
 
 ## Getting started with cf-workers-telegram-bot
