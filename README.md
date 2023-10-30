@@ -32,6 +32,7 @@ To use the deploy button:
 To fork this repo and use wrangler:
 
 - Click fork
+- `npm i -g wrangler`
 - `wrangler secret put SECRET_TELEGRAM_API_TOKEN` and set it to your telegram
   bot token
 - `wrangler d1 create llama2`
