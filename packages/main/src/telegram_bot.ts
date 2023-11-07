@@ -179,7 +179,7 @@ export default class TelegramBot extends TelegramApi {
 				],
 			});
 			return response
-				.replace(/\[(\/|)INST(S|)(s|)\]/, "")
+				.replace(/(\[|)(\/|)INST(S|)(s|)(\]|)/, "")
 				.replace(/<<(\/|)SYS>>/, "");
 		})();
 
