@@ -46,7 +46,7 @@ export default class TelegramBot extends TelegramApi {
 	// bot command: /sean
 	sean = async (update: TelegramUpdate, args: string[]): Promise<Response> => {
 		const ai = new Ai(this.ai);
-		let prompt;
+		let prompt: string;
 		if (args[0][0] === "/") {
 			prompt = args.slice(1).join(" ");
 		} else {
@@ -178,7 +178,10 @@ export default class TelegramBot extends TelegramApi {
 					{ role: "user", content: _prompt },
 				],
 			});
-			return response.replace(/\[\/INST(S|)\]/, "").replace(/<<\/SYS>>/, "");
+			return response
+				.replace(/\[(\/|)INST(S|)\]/, "")
+				.replace(/<<\/SYS>>/, "")
+				.replace(/<<SYS>>/, "");
 		})();
 
 		if (this.db) {
