@@ -209,7 +209,14 @@ export default class TelegramBot extends TelegramApi {
 				new TelegramInlineQueryResultArticle(response),
 			]);
 		}
-		return this.sendMessage(update.message?.chat.id ?? 0, response);
+		return this.sendMessage(
+			update.message?.chat.id ?? 0,
+			response,
+			"",
+			false,
+			false,
+			update.message?.message_id
+		);
 	};
 
 	// bot command: /paste
