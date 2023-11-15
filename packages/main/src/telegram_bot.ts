@@ -160,24 +160,27 @@ export default class TelegramBot extends TelegramApi {
 		})();
 
 		const response = await (async () => {
-			const { response } = await ai.run("@cf/meta/llama-2-7b-chat-int8", {
-				messages: [
-					{
-						role: "system",
-						content: `My name is ${this.bot_name}`,
-					},
-					{
-						role: "system",
-						content: `I am talking to ${update.message?.from.first_name}`,
-					},
-					{
-						role: "system",
-						content: `My source code is at https://github.com/codebam/cf-workers-telegram-bot`,
-					},
-					...old_messages,
-					{ role: "user", content: _prompt },
-				],
-			});
+			const { response } = await ai.run(
+				"@cf/mistral/mistral-7b-instruct-v0.1",
+				{
+					messages: [
+						{
+							role: "system",
+							content: `My name is ${this.bot_name}`,
+						},
+						{
+							role: "system",
+							content: `I am talking to ${update.message?.from.first_name}`,
+						},
+						{
+							role: "system",
+							content: `My source code is at https://github.com/codebam/cf-workers-telegram-bot`,
+						},
+						...old_messages,
+						{ role: "user", content: _prompt },
+					],
+				}
+			);
 			return response
 				.replace(/(\[|)(\/|)INST(S|)(s|)(\]|)/, "")
 				.replace(/<<(\/|)SYS>>/, "");
