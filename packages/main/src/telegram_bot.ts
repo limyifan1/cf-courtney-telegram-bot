@@ -88,7 +88,7 @@ export default class TelegramBot extends TelegramApi {
 			{ role: "user", content: prompt },
 		];
 
-		const result = await ai.run("@cf/meta/llama-2-7b-chat-int8", {
+		const result = await ai.run("@cf/mistral/mistral-7b-instruct-v0.1", {
 			messages,
 		});
 		return this.sendMessage(update.message?.chat.id ?? 0, result.response);
