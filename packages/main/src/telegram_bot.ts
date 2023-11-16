@@ -166,15 +166,19 @@ export default class TelegramBot extends TelegramApi {
 					messages: [
 						{
 							role: "system",
-							content: `Your name is ${this.bot_name}`,
+							content: `Your name is ${this.bot_name}.`,
 						},
 						{
 							role: "system",
-							content: `You are talking to ${update.message?.from.first_name}`,
+							content: `You are talking to ${update.message?.from.first_name}.`,
 						},
 						{
 							role: "system",
-							content: `Your source code is at https://github.com/codebam/cf-workers-telegram-bot`,
+							content: `Your source code is at https://github.com/codebam/cf-workers-telegram-bot .`,
+						},
+						{
+							role: "system",
+							content: `Your job is to respond to and answer questions.`,
 						},
 						...old_messages,
 						{ role: "user", content: _prompt },
