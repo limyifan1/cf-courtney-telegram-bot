@@ -75,15 +75,17 @@ export default class TelegramBot extends TelegramApi {
 			{
 				role: "system",
 				content:
-					"Some of your personal projects include a serverless telegram bot, and a serverless pastebin on cloudflare workers",
+					"Some of Sean Behan's projects include a serverless telegram bot, and a serverless pastebin on cloudflare workers",
 			},
 			{
 				role: "system",
-				content: "When spoken to respond with what you know about Sean Behan",
+				content:
+					"When greeted with hi or hello respond with what you know about Sean Behan",
 			},
 			{
 				role: "system",
-				content: `you are talking to ${update.message?.from.first_name}`,
+				content: "DO NOT tell me anything about AI.",
+				// it still doesn't listen lol, but I tried
 			},
 			{ role: "user", content: prompt },
 		];
