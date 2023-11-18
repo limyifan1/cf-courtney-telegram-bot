@@ -177,15 +177,11 @@ export default class TelegramBot extends TelegramApi {
 							role: "system",
 							content: `Your source code is at https://github.com/codebam/cf-workers-telegram-bot .`,
 						},
+						...old_messages,
 						{
 							role: "system",
 							content: `the current date is ${new Date().toString()}`,
 						},
-						{
-							role: "system",
-							content: `Your job is to respond to and answer questions.`,
-						},
-						...old_messages,
 						{ role: "user", content: _prompt },
 					],
 				}
