@@ -179,6 +179,10 @@ export default class TelegramBot extends TelegramApi {
 						},
 						{
 							role: "system",
+							content: `the current date is ${new Date().toString()}`,
+						},
+						{
+							role: "system",
 							content: `Your job is to respond to and answer questions.`,
 						},
 						...old_messages,
