@@ -160,43 +160,33 @@ export default class TelegramBot extends TelegramApi {
 		})();
 
 		const response = await (async () => {
-			const messages = [
+			const { response } = await ai.run(
+				"@cf/mistral/mistral-7b-instruct-v0.1",
 				{
-					role: "system",
-					content: `Your name is ${this.bot_name}.`,
-				},
-				{
-					role: "system",
-					content: `You are talking to ${update.message?.from.first_name}.`,
-				},
-				{
-					role: "system",
-					content: `Your source code is at https://github.com/codebam/cf-workers-telegram-bot .`,
-				},
-				{
-					role: "system",
-					content: `Your job is to respond to and answer questions.`,
-				},
-				...old_messages,
-				{ role: "user", content: _prompt },
-			];
-			const stream = await ai.run("@cf/mistral/mistral-7b-instruct-v0.1", {
-				messages,
-				stream: true,
-			});
-			const res = new Response(stream);
-			const response = await res.text();
-			const text = response
-				.split("data: ")
-				.join("")
-				.split("[DONE]")
-				.join("")
-				.split("\n")
-				.filter((line) => line.startsWith('{"response'))
-				.map((line) => JSON.parse(line))
-				.map((line) => line.response)
-				.join("");
-			return text
+					max_tokens: 1800,
+					messages: [
+						{
+							role: "system",
+							content: `Your name is ${this.bot_name}.`,
+						},
+						{
+							role: "system",
+							content: `You are talking to ${update.message?.from.first_name}.`,
+						},
+						{
+							role: "system",
+							content: `Your source code is at https://github.com/codebam/cf-workers-telegram-bot .`,
+						},
+						{
+							role: "system",
+							content: `Your job is to respond to and answer questions.`,
+						},
+						...old_messages,
+						{ role: "user", content: _prompt },
+					],
+				}
+			);
+			return response
 				.replace(/(\[|)(\/|)INST(S|)(s|)(\]|)/, "")
 				.replace(/<<(\/|)SYS>>/, "");
 		})();
@@ -217,10 +207,10 @@ export default class TelegramBot extends TelegramApi {
 			}
 		}
 
-		// if (response === "") {
-		// 	this.clear(update);
-		// 	return this.question(update, args);
-		// } // sometimes llama2 doesn't respond when given lots of system prompts
+		if (response === "") {
+			this.clear(update);
+			return this.question(update, args);
+		} // sometimes llama2 doesn't respond when given lots of system prompts
 
 		if (update.inline_query) {
 			return this.answerInlineQuery(update.inline_query.id, [
