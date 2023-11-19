@@ -64,15 +64,19 @@ export default class TelegramBot extends TelegramApi {
 			{ role: "system", content: "Sean Behan is from Pickering, ON, Canada." },
 			{ role: "system", content: "Sean Behan is Canadian." },
 			{ role: "system", content: "Sean Behan's GitHub username is codebam." },
-			{ role: "system", content: "Sean Behan is 5 feet 11 inches tall." },
+			{
+				role: "system",
+				content: "Sean Behan is 5 feet 11 and a half inches tall.",
+			},
 			{ role: "system", content: "Sean Behan has brown hair and hazel eyes." },
 			{
 				role: "system",
-				content: "Sean Behan likes electronic and rap music.",
+				content:
+					"Sean Behan likes playing video games such as Counter Strike 2, Apex Legends, Overwatch 2.",
 			},
 			{
 				role: "system",
-				content: "Sean Behan plays video games.",
+				content: "Sean Behan likes electronic and rap music.",
 			},
 			{ role: "system", content: "Sean Behan's website is seanbehan.ca." },
 			{
@@ -120,8 +124,9 @@ export default class TelegramBot extends TelegramApi {
 			{ role: "user", content: prompt },
 		];
 
-		const result = await ai.run("@cf/mistral/mistral-7b-instruct-v0.1", {
+		const result = await ai.run("@cf/meta/llama-2-7b-chat-fp16", {
 			messages,
+			max_tokens: 2500,
 		});
 		return this.sendMessage(update.message?.chat.id ?? 0, result.response);
 	};
@@ -192,32 +197,29 @@ export default class TelegramBot extends TelegramApi {
 		})();
 
 		const response = await (async () => {
-			const { response } = await ai.run(
-				"@cf/mistral/mistral-7b-instruct-v0.1",
-				{
-					max_tokens: 1800,
-					messages: [
-						{
-							role: "system",
-							content: `Your name is ${this.bot_name}.`,
-						},
-						{
-							role: "system",
-							content: `You are talking to ${update.message?.from.first_name}.`,
-						},
-						{
-							role: "system",
-							content: `Your source code is at https://github.com/codebam/cf-workers-telegram-bot .`,
-						},
-						...old_messages,
-						{
-							role: "system",
-							content: `the current date is ${new Date().toString()}`,
-						},
-						{ role: "user", content: _prompt },
-					],
-				}
-			);
+			const { response } = await ai.run("@cf/meta/llama-2-7b-chat-fp16", {
+				max_tokens: 2500,
+				messages: [
+					{
+						role: "system",
+						content: `Your name is ${this.bot_name}.`,
+					},
+					{
+						role: "system",
+						content: `You are talking to ${update.message?.from.first_name}.`,
+					},
+					{
+						role: "system",
+						content: `Your source code is at https://github.com/codebam/cf-workers-telegram-bot .`,
+					},
+					...old_messages,
+					{
+						role: "system",
+						content: `the current date is ${new Date().toString()}`,
+					},
+					{ role: "user", content: _prompt },
+				],
+			});
 			return response
 				.replace(/(\[|)(\/|)INST(S|)(s|)(\]|)/, "")
 				.replace(/<<(\/|)SYS>>/, "");
