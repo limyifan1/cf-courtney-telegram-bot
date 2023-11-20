@@ -1,5 +1,7 @@
 # cf-workers-telegram-bot
 
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/codebam/cf-workers-telegram-bot)
+
 ![screenshot of cf-workers-telegram-bot](/screenshot.png)
 
 serverless telegram bot on cf workers
@@ -13,8 +15,6 @@ messages with llama2 if a command isn't found.
 
 To get continuous conversation with llama2 working make sure you add a database
 to your wrangler.toml and initailize it with the schema.sql
-
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/codebam/cf-workers-telegram-bot)
 
 To use the deploy button:
 
