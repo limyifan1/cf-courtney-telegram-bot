@@ -1,5 +1,7 @@
 # cf-workers-telegram-bot
 
+![screenshot of cf-workers-telegram-bot](/screenshot.png)
+
 serverless telegram bot on cf workers
 
 The original `worker.js` is the content of Nikhil John's

@@ -124,9 +124,9 @@ export default class TelegramBot extends TelegramApi {
 			{ role: "user", content: prompt },
 		];
 
-		const result = await ai.run("@cf/meta/llama-2-7b-chat-fp16", {
+		const result = await ai.run("@cf/mistral/mistral-7b-instruct-v0.1", {
 			messages,
-			max_tokens: 2500,
+			max_tokens: 1800,
 		});
 		return this.sendMessage(update.message?.chat.id ?? 0, result.response);
 	};
@@ -197,29 +197,32 @@ export default class TelegramBot extends TelegramApi {
 		})();
 
 		const response = await (async () => {
-			const { response } = await ai.run("@cf/meta/llama-2-7b-chat-fp16", {
-				max_tokens: 2500,
-				messages: [
-					{
-						role: "system",
-						content: `Your name is ${this.bot_name}.`,
-					},
-					{
-						role: "system",
-						content: `You are talking to ${update.message?.from.first_name}.`,
-					},
-					{
-						role: "system",
-						content: `Your source code is at https://github.com/codebam/cf-workers-telegram-bot .`,
-					},
-					...old_messages,
-					{
-						role: "system",
-						content: `the current date is ${new Date().toString()}`,
-					},
-					{ role: "user", content: _prompt },
-				],
-			});
+			const { response } = await ai.run(
+				"@cf/mistral/mistral-7b-instruct-v0.1",
+				{
+					max_tokens: 1800,
+					messages: [
+						{
+							role: "system",
+							content: `Your name is ${this.bot_name}.`,
+						},
+						{
+							role: "system",
+							content: `You are talking to ${update.message?.from.first_name}.`,
+						},
+						{
+							role: "system",
+							content: `Your source code is at https://github.com/codebam/cf-workers-telegram-bot .`,
+						},
+						...old_messages,
+						{
+							role: "system",
+							content: `the current date is ${new Date().toString()}`,
+						},
+						{ role: "user", content: _prompt },
+					],
+				}
+			);
 			return response
 				.replace(/(\[|)(\/|)INST(S|)(s|)(\]|)/, "")
 				.replace(/<<(\/|)SYS>>/, "");
