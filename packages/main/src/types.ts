@@ -32,6 +32,8 @@ export class Config {
 	ai: any;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	db: any;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	r2: any;
 
 	constructor(config: Partial<Config> = {}) {
 		this.bot_name = config.bot_name || "";
@@ -43,6 +45,7 @@ export class Config {
 		this.handler = config.handler || new Handler([]);
 		this.ai = config.ai;
 		this.db = config.db;
+		this.r2 = config.r2;
 	}
 }
 

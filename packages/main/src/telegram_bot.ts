@@ -27,6 +27,7 @@ export default class TelegramBot extends TelegramApi {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	ai: any;
 	db: D1Database;
+	r2: R2Bucket;
 	bot_name: string;
 
 	constructor(config: Config) {
@@ -40,6 +41,7 @@ export default class TelegramBot extends TelegramApi {
 		this.get_set = config.kv?.get_set as KVNamespace;
 		this.ai = config.ai;
 		this.db = config.db;
+		this.r2 = config.r2;
 		this.bot_name = config.bot_name;
 	}
 
@@ -151,6 +153,29 @@ export default class TelegramBot extends TelegramApi {
 			return this.sendMessage(update.message?.chat.id ?? 0, "_");
 		}
 		return this.sendMessage(update.message?.chat.id ?? 0, "failed");
+	};
+
+	// bot command: /image
+	image = async (update: TelegramUpdate, args: string[]): Promise<Response> => {
+		const ai = new Ai(this.ai);
+		let _prompt: string;
+		if (args[0][0] === "/") {
+			_prompt = args.slice(1).join(" ");
+		} else {
+			_prompt = args.join(" ");
+		}
+		if (_prompt === "") {
+			_prompt = "";
+		}
+		const inputs = { prompt: _prompt };
+		const response = await ai.run(
+			"@cf/stabilityai/stable-diffusion-xl-base-1.0",
+			inputs
+		);
+		const id = crypto.randomUUID();
+		await this.r2.put(id, response);
+		const url = "https://r2.seanbehan.ca/" + id;
+		return this.sendPhoto(update.message?.chat.id ?? 0, url);
 	};
 
 	// bot command: /question

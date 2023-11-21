@@ -117,6 +117,27 @@ export default class TelegramApi extends BotApi {
 			)
 		);
 
+	// trigger editMessage command of BotAPI
+	editMessageText = async (
+		chat_id: number,
+		message_id: number,
+		text: string
+	): Promise<Response> =>
+		fetch(
+			log(
+				addSearchParams(
+					new URL(
+						`${this.webhook.api.origin}${this.webhook.api.pathname}/editMessageText`
+					),
+					{
+						chat_id: chat_id.toString(),
+						message_id: message_id.toString(),
+						text,
+					}
+				).href
+			)
+		);
+
 	// trigger sendMessage command of BotAPI
 	sendMessage = async (
 		chat_id: number,
@@ -166,6 +187,38 @@ export default class TelegramApi extends BotApi {
 				).href
 			)
 		);
+
+	// trigger sendPhoto command of BotAPI
+	sendPhotoRaw = async (
+		chat_id: number,
+		photo: File,
+		caption = "",
+		parse_mode = "",
+		disable_notification = false,
+		reply_to_message_id = 0
+	) => {
+		const formdata = new FormData();
+		formdata.set("file", photo);
+		return fetch(
+			log(
+				addSearchParams(
+					new URL(
+						`${this.webhook.api.origin}${this.webhook.api.pathname}/sendPhoto`
+					),
+					{
+						chat_id: chat_id.toString(),
+						caption,
+						parse_mode,
+						disable_notification: disable_notification.toString(),
+						reply_to_message_id: reply_to_message_id.toString(),
+					}
+				).href
+			),
+			{ method: "POST", body: formdata }
+		)
+			.then((resp) => resp.text())
+			.then(log);
+	};
 
 	// trigger sendPhoto command of BotAPI
 	sendPhoto = async (

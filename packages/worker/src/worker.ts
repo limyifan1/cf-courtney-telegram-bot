@@ -20,6 +20,8 @@ interface Environment {
 	AI: string;
 
 	DB: D1Database;
+
+	R2: R2Bucket;
 }
 
 export default {
@@ -54,11 +56,13 @@ export default {
 					"/clear": TelegramCommands.clear as Command,
 					"/help": TelegramCommands.commandList as Command,
 					"/sean": TelegramCommands.sean as Command,
+					"/image": TelegramCommands.image as Command,
 					"/start": TelegramCommands.commandList as Command,
 				},
 				kv: { get_set: env.KV_GET_SET, uid_data: env.KV_UID_DATA },
 				ai: env.AI,
 				db: env.DB,
+				r2: env.R2,
 			},
 			{
 				bot_name: "@duckduckbot",
@@ -124,10 +128,5 @@ export default {
 				ai: env.AI,
 				db: env.DB,
 			},
-		])
-			.handle(request)
-			.catch((err) => {
-				console.log({ err });
-				return new Response("ok");
-			}),
+		]).handle(request),
 };

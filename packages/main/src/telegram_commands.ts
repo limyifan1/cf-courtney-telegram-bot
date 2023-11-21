@@ -23,4 +23,6 @@ export default class TelegramCommands {
 	static code: TelegramCommand = async (bot, update) => bot.code(update);
 	static commandList: TelegramCommand = async (bot, update) =>
 		bot.commandList(update);
+	static image: TelegramCommand = async (bot, update, args: string[]) =>
+		bot.image(update, args);
 }
