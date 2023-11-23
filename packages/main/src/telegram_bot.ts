@@ -221,37 +221,35 @@ export default class TelegramBot extends TelegramApi {
 			return [];
 		})();
 
-		const response = await (async () => {
-			const { response } = await ai.run(
-				"@cf/mistral/mistral-7b-instruct-v0.1",
-				{
-					max_tokens: 1800,
-					messages: [
-						{
-							role: "system",
-							content: `Your name is ${this.bot_name}.`,
-						},
-						{
-							role: "system",
-							content: `You are talking to ${update.message?.from.first_name}.`,
-						},
-						{
-							role: "system",
-							content: `Your source code is at https://github.com/codebam/cf-workers-telegram-bot .`,
-						},
-						...old_messages,
-						{
-							role: "system",
-							content: `the current date is ${new Date().toString()}`,
-						},
-						{ role: "user", content: _prompt },
-					],
-				}
+		const response = await ai
+			.run("@cf/mistral/mistral-7b-instruct-v0.1", {
+				max_tokens: 1800,
+				messages: [
+					{
+						role: "system",
+						content: `Your name is ${this.bot_name}.`,
+					},
+					{
+						role: "system",
+						content: `You are talking to ${update.message?.from.first_name}.`,
+					},
+					{
+						role: "system",
+						content: `Your source code is at https://github.com/codebam/cf-workers-telegram-bot .`,
+					},
+					...old_messages,
+					{
+						role: "system",
+						content: `the current date is ${new Date().toString()}`,
+					},
+					{ role: "user", content: _prompt },
+				],
+			})
+			.then(({ response }) =>
+				response
+					.replace(/(\[|)(\/|)INST(S|)(s|)(\]|)/, "")
+					.replace(/<<(\/|)SYS>>/, "")
 			);
-			return response
-				.replace(/(\[|)(\/|)INST(S|)(s|)(\]|)/, "")
-				.replace(/<<(\/|)SYS>>/, "");
-		})();
 
 		if (this.db) {
 			const { success } = await this.db
