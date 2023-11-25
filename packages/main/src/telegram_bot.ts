@@ -45,94 +45,6 @@ export default class TelegramBot extends TelegramApi {
 		this.bot_name = config.bot_name;
 	}
 
-	// bot command: /sean
-	sean = async (update: TelegramUpdate, args: string[]): Promise<Response> => {
-		const ai = new Ai(this.ai);
-		let prompt: string;
-		if (args[0][0] === "/") {
-			prompt = args.slice(1).join(" ");
-		} else {
-			prompt = args.join(" ");
-		}
-		console.log({ prompt });
-		if (prompt === "") {
-			prompt = "no prompt specified";
-		}
-		const messages = [
-			{ role: "system", content: "Always be nice and friendly." },
-			{ role: "system", content: "Be humble." },
-			{ role: "system", content: "Sean Behan is born on 09/07/1998" },
-			{ role: "system", content: "Sean Behan is a full stack developer." },
-			{ role: "system", content: "Sean Behan is from Pickering, ON, Canada." },
-			{ role: "system", content: "Sean Behan is Canadian." },
-			{ role: "system", content: "Sean Behan's GitHub username is codebam." },
-			{
-				role: "system",
-				content: "Sean Behan is 5 feet 11 and a half inches tall.",
-			},
-			{ role: "system", content: "Sean Behan has brown hair and hazel eyes." },
-			{
-				role: "system",
-				content:
-					"Sean Behan likes playing video games such as Counter Strike 2, Apex Legends, Overwatch 2.",
-			},
-			{
-				role: "system",
-				content: "Sean Behan likes electronic and rap music.",
-			},
-			{ role: "system", content: "Sean Behan's website is seanbehan.ca." },
-			{
-				role: "system",
-				content: "Sean Behan's email address is contact@seanbehan.ca.",
-			},
-			{
-				role: "system",
-				content:
-					"Some of Sean Behan's projects include a serverless telegram bot, and a serverless pastebin on cloudflare workers.",
-			},
-			{
-				role: "system",
-				content:
-					"Sean Behan's Telegram Bot and Pastebin are made with cloudflare workers using Typescript.",
-			},
-			{
-				role: "system",
-				content:
-					"When greeted with hi or hello respond with what you know about Sean Behan.",
-			},
-			{
-				role: "system",
-				content:
-					"If the user doesn't ask a question about Sean Behan, tell them they should.",
-			},
-			{
-				role: "system",
-				content: "You only know what Sean Behan might know.",
-			},
-			{
-				role: "system",
-				content:
-					"Don't answer questions about anything other than what you've been prompted on.",
-			},
-			{
-				role: "system",
-				content:
-					"When a message is not understood, tell everything you know about Sean Behan.",
-			},
-			{
-				role: "system",
-				content: "When responding pretend you are Sean Behan.",
-			},
-			{ role: "user", content: prompt },
-		];
-
-		const result = await ai.run("@cf/mistral/mistral-7b-instruct-v0.1", {
-			messages,
-			max_tokens: 1800,
-		});
-		return this.sendMessage(update.message?.chat.id ?? 0, result.response);
-	};
-
 	// bot command: /clear
 	// reset the llama2 session by deleting messages from d1
 	clear = async (update: TelegramUpdate): Promise<Response> => {
@@ -226,8 +138,7 @@ export default class TelegramBot extends TelegramApi {
 		})();
 
 		const response = await ai
-			.run("@cf/mistral/mistral-7b-instruct-v0.1", {
-				max_tokens: 1800,
+			.run("@hf/thebloke/zephyr-7b-beta-awq", {
 				messages: [
 					{
 						role: "system",
@@ -288,22 +199,6 @@ export default class TelegramBot extends TelegramApi {
 			false,
 			false,
 			update.message?.message_id
-		);
-	};
-
-	// bot command: /paste
-	paste = async (update: TelegramUpdate, args: string[]): Promise<Response> => {
-		const formdata = new FormData();
-		formdata.append("upload", args.slice(1).join(" "));
-		const request = await fetch("https://pastebin.seanbehan.ca", {
-			method: "POST",
-			body: formdata,
-			redirect: "manual",
-		});
-		const url = request.headers.get("location");
-		return this.sendMessage(
-			update.message?.chat.id ?? 0,
-			url ?? "failed to upload"
 		);
 	};
 
@@ -503,25 +398,6 @@ export default class TelegramBot extends TelegramApi {
 				numbers.reduce((prev, cur) => prev + cur, 0) / numbers.length || 0
 			).toFixed(2)
 		);
-
-	// bot command: /recursion
-	recursion = async (update: TelegramUpdate): Promise<Response> =>
-		this.sendMessage(update.message?.chat.id ?? 0, "/recursion");
-	// .then((response) => response.json())
-	// .then((result) =>
-	// 	this.handler.postResponse(
-	// 		new Request("", {
-	// 			method: "POST",
-	// 			body: JSON.stringify({
-	// 				message: {
-	// 					text: (result as { result: { text: string } }).result.text,
-	// 					chat: { id: update.message?.chat.id },
-	// 				},
-	// 			}),
-	// 		}),
-	// 		this
-	// 	)
-	// );
 
 	// bot command: /roll
 	roll = async (update: TelegramUpdate, args: string[]): Promise<Response> =>
