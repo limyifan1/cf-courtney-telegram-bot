@@ -138,7 +138,7 @@ export default class TelegramBot extends TelegramApi {
 		})();
 
 		const response = await ai
-			.run("@hf/thebloke/zephyr-7b-beta-awq", {
+			.run("@hf/thebloke/llama-2-13b-chat-awq", {
 				messages: [
 					{
 						role: "system",
