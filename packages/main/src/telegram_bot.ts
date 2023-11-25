@@ -167,7 +167,11 @@ export default class TelegramBot extends TelegramApi {
 		if (_prompt === "") {
 			_prompt = "";
 		}
-		const inputs = { prompt: _prompt };
+		const inputs = { prompt: _prompt, num_steps: 20 };
+		await this.sendMessage(
+			update.message?.chat.id ?? 0,
+			"image is processing. please wait..."
+		);
 		const response = await ai.run(
 			"@cf/stabilityai/stable-diffusion-xl-base-1.0",
 			inputs
