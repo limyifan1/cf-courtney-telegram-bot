@@ -15,6 +15,8 @@ export default class TelegramCommands {
 		bot.duckduckgo(update, args);
 	static question: TelegramCommand = async (bot, update, args) =>
 		bot.question(update, args);
+	static sean: TelegramCommand = async (bot, update, args) =>
+		bot.sean(update, args);
 	static clear: TelegramCommand = async (bot, update) => bot.clear(update);
 	static code: TelegramCommand = async (bot, update) => bot.code(update);
 	static commandList: TelegramCommand = async (bot, update) =>

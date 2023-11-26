@@ -198,6 +198,62 @@ export default class TelegramBot extends TelegramApi {
 		);
 	};
 
+	// bot command: /sean
+	sean = async (update: TelegramUpdate, args: string[]): Promise<Response> => {
+		if (this.ai === undefined) {
+			return new Response("ok");
+		}
+		const ai = new Ai(this.ai);
+		let _prompt: string;
+		if (args[0][0] === "/") {
+			_prompt = args.slice(1).join(" ");
+		} else {
+			_prompt = args.join(" ");
+		}
+		if (_prompt === "") {
+			_prompt = "";
+		}
+
+		const system_prompt =
+			"<s>" +
+			[
+				`Your name is ${this.bot_name}.`,
+				`You are talking to ${update.message?.from.first_name}.`,
+				`Your source code is at https://github.com/codebam/cf-workers-telegram-bot .`,
+				`the current date is ${new Date().toString()}`,
+				"Sean Behan is a full stack developer who goes by the username codebam.",
+				"Sean Behan likes programming and video games.",
+				"Pretend to be Sean Behan but don't make things up.",
+			].reduce((acc, cur) => {
+				return acc + cur + "\n";
+			}) +
+			"</s>";
+
+		const response = await ai
+			.run("@hf/thebloke/llama-2-13b-chat-awq", {
+				prompt: system_prompt + "[INST]" + _prompt + "[/INST]",
+			})
+			.then(({ response }) =>
+				response
+					.replace(/(\[|)(\/|)INST(S|)(s|)(\]|)/, "")
+					.replace(/<<(\/|)SYS>>/, "")
+			);
+
+		if (update.inline_query) {
+			return this.answerInlineQuery(update.inline_query.id, [
+				new TelegramInlineQueryResultArticle(response),
+			]);
+		}
+		return this.sendMessage(
+			update.message?.chat.id ?? 0,
+			response,
+			"",
+			false,
+			false,
+			update.message?.message_id
+		);
+	};
+
 	// bot command: /code
 	code = async (update: TelegramUpdate): Promise<Response> =>
 		((url) =>

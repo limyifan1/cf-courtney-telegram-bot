@@ -119,7 +119,7 @@ export default {
 					new URL(new URL(request.url).origin)
 				),
 				commands: {
-					default: TelegramCommands.question as Command,
+					default: TelegramCommands.sean as Command,
 					"/clear": TelegramCommands.clear as Command,
 					"/start": TelegramCommands.commandList as Command,
 				},
