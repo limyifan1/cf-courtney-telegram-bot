@@ -55,7 +55,7 @@ export default {
 					"/clear": TelegramCommands.clear as Command,
 					"/help": TelegramCommands.commandList as Command,
 					"/image": TelegramCommands.image as Command,
-					"/start": TelegramCommands.commandList as Command,
+					"/start": TelegramCommands.question as Command,
 				},
 				kv: { get_set: env.KV_GET_SET, uid_data: env.KV_UID_DATA },
 				ai: env.AI,
