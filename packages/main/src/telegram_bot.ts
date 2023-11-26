@@ -137,28 +137,24 @@ export default class TelegramBot extends TelegramApi {
 			return [];
 		})();
 
+		const system_prompt =
+			"<s>" +
+			[
+				`Your name is ${this.bot_name}.`,
+				`You are talking to ${update.message?.from.first_name}.`,
+				`Your source code is at https://github.com/codebam/cf-workers-telegram-bot .`,
+				`the current date is ${new Date().toString()}`,
+			].reduce((acc, cur) => {
+				return acc + cur + "\n";
+			}) +
+			old_messages.reduce((acc, cur) => {
+				return acc + cur.content + "\n";
+			}, "") +
+			"</s>";
+
 		const response = await ai
 			.run("@hf/thebloke/llama-2-13b-chat-awq", {
-				messages: [
-					{
-						role: "system",
-						content: `Your name is ${this.bot_name}.`,
-					},
-					{
-						role: "system",
-						content: `You are talking to ${update.message?.from.first_name}.`,
-					},
-					{
-						role: "system",
-						content: `Your source code is at https://github.com/codebam/cf-workers-telegram-bot .`,
-					},
-					...old_messages,
-					{
-						role: "system",
-						content: `the current date is ${new Date().toString()}`,
-					},
-					{ role: "user", content: _prompt },
-				],
+				prompt: system_prompt + "[INST]" + _prompt + "[/INST]",
 			})
 			.then(({ response }) =>
 				response
