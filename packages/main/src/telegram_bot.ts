@@ -152,9 +152,12 @@ export default class TelegramBot extends TelegramApi {
 			}, "") +
 			"</s>";
 
+		const p = system_prompt + "[INST]" + _prompt + "[/INST]";
+		const prompt = p.slice(p.length - 4096, p.length);
 		const response = await ai
 			.run("@hf/thebloke/llama-2-13b-chat-awq", {
-				prompt: system_prompt + "[INST]" + _prompt + "[/INST]",
+				prompt,
+				max_tokens: 595,
 			})
 			.then(({ response }) =>
 				response
@@ -302,7 +305,7 @@ export default class TelegramBot extends TelegramApi {
 																`${instant_answer_url}\n\n<a href="${
 																	addSearchParams(new URL(duckduckgo_url), {
 																		q: args
-																			.slice(1)
+																			.slice(2)
 																			.join(" ")
 																			.replace(/^!\w* /, ""),
 																	}).href
