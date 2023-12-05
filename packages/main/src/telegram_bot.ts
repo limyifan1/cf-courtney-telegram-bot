@@ -155,9 +155,9 @@ export default class TelegramBot extends TelegramApi {
 		const p = system_prompt + "[INST]" + _prompt + "[/INST]";
 		const prompt = p.slice(p.length - 4096, p.length);
 		const response = await ai
-			.run("@hf/thebloke/llama-2-13b-chat-awq", {
+			.run("@hf/thebloke/zephyr-7b-beta-awq", {
 				prompt,
-				max_tokens: 595,
+				max_tokens: 596,
 			})
 			.then(({ response }) =>
 				response
@@ -240,6 +240,7 @@ export default class TelegramBot extends TelegramApi {
 				response
 					.replace(/(\[|)(\/|)INST(S|)(s|)(\]|)/, "")
 					.replace(/<<(\/|)SYS>>/, "")
+					.replace(/[OUT]/, "")
 			);
 
 		if (update.inline_query) {
