@@ -39,6 +39,6 @@
 		"typescript": "^5.3.2"
 	},
 	"dependencies": {
-		"@cloudflare/ai": "^1.0.36"
+		"@cloudflare/ai": "^1.0.39"
 	}
 }
