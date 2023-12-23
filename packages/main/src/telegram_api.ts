@@ -28,15 +28,21 @@ export default class TelegramApi extends BotApi {
 		default: new Response(),
 	};
 
-	update = async (update: Update): Promise<Response> =>
-		((log({ update }) &&
-			update.message &&
-			this.updates.message(update as TelegramUpdate)) ||
-			(update.inline_query &&
-				(update.inline_query as TelegramUpdate).query === "" &&
-				undefined) ||
-			this.updates.inline_query(update as TelegramUpdate)) ??
-		this.updates.default;
+	update = async (update: Update): Promise<Response> => {
+		console.log({ update });
+		if (update) {
+			if (update.inline_query) {
+				if ((update.inline_query as TelegramUpdate).query !== "") {
+					return this.updates.inline_query(update as TelegramUpdate);
+				}
+			} else {
+				if (update.message) {
+					return this.updates.message(update as TelegramUpdate);
+				}
+			}
+		}
+		return this.updates.default;
+	};
 
 	// greet new users who join
 	greetUsers = async (update: TelegramUpdate): Promise<Response> =>
@@ -44,7 +50,7 @@ export default class TelegramApi extends BotApi {
 			? this.sendMessage(
 					update.message.chat.id,
 					`Welcome to ${update.message.chat.title}, ${update.message.from.username}`
-			  )
+				)
 			: this.updates.default;
 
 	getCommand = (args: string[]): string => args[0]?.split("@")[0];
@@ -62,11 +68,11 @@ export default class TelegramApi extends BotApi {
 							? this.commands[command]?.(this, update, [...text_args, ...args])
 							: log({
 									error: `command '${command}' does not exist, using default`,
-							  }) &&
-							  this.commands["default"]?.(this, update, [
+								}) &&
+								this.commands["default"]?.(this, update, [
 									...text_args,
 									...args,
-							  ]))(
+								]))(
 						// run the command
 						this.getCommand(text_args)
 					))(
@@ -75,7 +81,7 @@ export default class TelegramApi extends BotApi {
 						.trimStart()
 						.replace(/^([^\s]*\s)\s*/gm, "$1")
 						.split(" ")
-			  )
+				)
 			: this.updates.default;
 
 	// execute the inline custom bot commands from bot configurations
@@ -87,7 +93,7 @@ export default class TelegramApi extends BotApi {
 							update,
 							"inline",
 							update.inline_query?.query.trimStart().split(" ")
-					  ).then((_command_response) => _command_response)
+						).then((_command_response) => _command_response)
 					: this.updates.default
 		);
 
