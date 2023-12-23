@@ -45,6 +45,41 @@ export default class TelegramBot extends TelegramApi {
 		this.bot_name = config.bot_name;
 	}
 
+	// bot command: /translate
+	translate = async (
+		update: TelegramUpdate,
+		args: string[]
+	): Promise<Response> => {
+		if (this.ai === undefined) {
+			return new Response("ok");
+		}
+		const ai = new Ai(this.ai);
+		let _prompt: string;
+		if (args[0][0] === "/") {
+			_prompt = args.slice(1).join(" ");
+		} else {
+			_prompt = args.join(" ");
+		}
+		if (_prompt === "") {
+			_prompt = "";
+		}
+		const langs = ["french", "arabic", "german", "spanish"];
+		const inline_articles = await Promise.all(
+			langs.map(async (lang) => {
+				const response = await ai.run("@cf/meta/m2m100-1.2b", {
+					text: _prompt,
+					source_lang: lang,
+					target_lang: "english",
+				});
+				return new TelegramInlineQueryResultArticle(response.translated_text);
+			})
+		);
+		return this.answerInlineQuery(
+			update.inline_query?.id ?? 0,
+			inline_articles
+		);
+	};
+
 	// bot command: /clear
 	// reset the llama2 session by deleting messages from d1
 	clear = async (update: TelegramUpdate): Promise<Response> => {
@@ -264,7 +299,7 @@ export default class TelegramBot extends TelegramApi {
 			update.inline_query
 				? this.answerInlineQuery(update.inline_query.id, [
 						new TelegramInlineQueryResultArticle(url),
-				  ])
+					])
 				: this.sendMessage(update.message?.chat.id ?? 0, url))(
 			"https://github.com/codebam/cf-workers-telegram-bot"
 		);
@@ -279,16 +314,16 @@ export default class TelegramBot extends TelegramApi {
 				update.inline_query && query === ""
 					? this.answerInlineQuery(update.inline_query.id, [
 							new TelegramInlineQueryResultArticle("https://duckduckgo.com"),
-					  ])
+						])
 					: update.inline_query
-					  ? fetch(
+						? fetch(
 								addSearchParams(new URL("https://api.duckduckgo.com"), {
 									q: query,
 									format: "json",
 									t: "telegram_bot",
 									no_redirect: "1",
 								}).href
-					    ).then((response) =>
+							).then((response) =>
 								response
 									.json()
 									.then((results) => results as DDGQueryResponse)
@@ -321,7 +356,7 @@ export default class TelegramBot extends TelegramApi {
 																"",
 																default_thumb_url
 															),
-													  ]
+														]
 													: [
 															new TelegramInlineQueryResultArticle(
 																duckduckgo_url,
@@ -329,7 +364,7 @@ export default class TelegramBot extends TelegramApi {
 																"",
 																default_thumb_url
 															),
-													  ],
+														],
 												3600 // 1 hour
 											))(
 											ddg_response.Redirect ?? ddg_response.AbstractURL,
@@ -338,15 +373,15 @@ export default class TelegramBot extends TelegramApi {
 														ddg_response.Image !== "" && ddg_response.Image
 															? ddg_response.Image
 															: ddg_response.RelatedTopics.length !== 0 &&
-															    ddg_response.RelatedTopics[0].Icon.URL !== ""
-															  ? ddg_response.RelatedTopics[0].Icon.URL
-															  : "/i/f96d4798.png"
-												  }`
+																  ddg_response.RelatedTopics[0].Icon.URL !== ""
+																? ddg_response.RelatedTopics[0].Icon.URL
+																: "/i/f96d4798.png"
+													}`
 												: ""
 										)
 									)
-					    )
-					  : this.sendMessage(update.message?.chat.id ?? 0, duckduckgo_url))(
+							)
+						: this.sendMessage(update.message?.chat.id ?? 0, duckduckgo_url))(
 				query === ""
 					? "https://duckduckgo.com"
 					: (() => {
@@ -358,7 +393,7 @@ export default class TelegramBot extends TelegramApi {
 							return addSearchParams(new URL("https://duckduckgo.com"), {
 								q: query.split(" ").slice(1).join(" "),
 							}).href;
-					  })()
+						})()
 			))(args.join(" "));
 
 	// bot command: /kanye
@@ -370,7 +405,7 @@ export default class TelegramBot extends TelegramApi {
 					update.inline_query
 						? this.answerInlineQuery(update.inline_query.id, [
 								new TelegramInlineQueryResultArticle(message),
-						  ])
+							])
 						: this.sendMessage(update.message?.chat.id ?? 0, message))(
 					`Kanye says... ${json.quote}`
 				)
@@ -395,7 +430,7 @@ export default class TelegramBot extends TelegramApi {
 									),
 								],
 								0
-						  )
+							)
 						: this.sendMessage(update.message?.chat.id ?? 0, message, "HTML"))(
 					joke_response.joke ??
 						`${joke_response.setup}\n\n<tg-spoiler>${joke_response.delivery}</tg-spoiler>`
@@ -413,7 +448,7 @@ export default class TelegramBot extends TelegramApi {
 							update.inline_query.id,
 							[new TelegramInlineQueryResultPhoto(shibe_response[0])],
 							0
-					  )
+						)
 					: this.sendPhoto(update.message?.chat.id ?? 0, shibe_response[0])
 			);
 
@@ -428,11 +463,11 @@ export default class TelegramBot extends TelegramApi {
 							update.inline_query.id,
 							[new TelegramInlineQueryResultArticle(bored_response.activity)],
 							0
-					  )
+						)
 					: this.sendMessage(
 							update.message?.chat.id ?? 0,
 							bored_response.activity
-					  )
+						)
 			);
 
 	// bot command: /epoch
@@ -443,7 +478,7 @@ export default class TelegramBot extends TelegramApi {
 						update.inline_query.id,
 						[new TelegramInlineQueryResultArticle(seconds)],
 						0
-				  )
+					)
 				: this.sendMessage(update.message?.chat.id ?? 0, seconds))(
 			Math.floor(Date.now() / 1000).toString()
 		);
@@ -467,7 +502,7 @@ export default class TelegramBot extends TelegramApi {
 								outcome
 							)
 						),
-				  ])
+					])
 				: this.sendMessage(
 						update.message?.chat.id ?? 0,
 						message(
@@ -475,7 +510,7 @@ export default class TelegramBot extends TelegramApi {
 							update.message?.from.first_name ?? "",
 							outcome
 						)
-				  ))(
+					))(
 			Math.floor(Math.random() * (parseInt(args[1]) || 6 - 1 + 1) + 1),
 			(username: string, first_name: string, outcome: number) =>
 				`${first_name ?? username} rolled a ${

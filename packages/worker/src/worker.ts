@@ -17,6 +17,8 @@ interface Environment {
 
 	SECRET_TELEGRAM_API_TOKEN4: string;
 
+	SECRET_TELEGRAM_API_TOKEN5: string;
+
 	AI: string;
 
 	DB: D1Database;
@@ -125,6 +127,23 @@ export default {
 				},
 				ai: env.AI,
 				db: env.DB,
+			},
+			{
+				bot_name: "@TranslatePartyBot",
+				api: TelegramBot,
+				webhook: new TelegramWebhook(
+					new URL(
+						`https://api.telegram.org/bot${env.SECRET_TELEGRAM_API_TOKEN5}`
+					),
+					env.SECRET_TELEGRAM_API_TOKEN5,
+					new URL(new URL(request.url).origin)
+				),
+				commands: {
+					default: TelegramCommands.translate as Command,
+					inline: TelegramCommands.translate as Command,
+					"/start": TelegramCommands.commandList as Command,
+				},
+				ai: env.AI,
 			},
 		]).handle(request),
 };

@@ -36,10 +36,10 @@ export default class Handler {
 		_bot?.webhook.token === ""
 			? this.responses.default()
 			: _request
-			? _request
-					.json()
-					.then((update) => (_bot as BotApi).update(update as Update))
-			: this.responses.default();
+				? _request
+						.json()
+						.then((update) => (_bot as BotApi).update(update as Update))
+				: this.responses.default();
 
 	responses: Record<
 		string,
@@ -55,10 +55,10 @@ export default class Handler {
 	): Promise<Record<string, Config> | Record<string, never>> =>
 		Promise.all(
 			configs.map((bot_config: Partial<Config>) =>
-				sha256(bot_config.webhook?.token ?? "").then((hash) => [
-					hash,
-					bot_config,
-				])
+				sha256(bot_config.webhook?.token ?? "").then((hash) => {
+					console.log(hash);
+					return [hash, bot_config];
+				})
 			)
 		).then((result) => Object.fromEntries(result));
 
@@ -76,7 +76,7 @@ export default class Handler {
 								handler: this,
 							});
 						})(new URL(request.url).pathname.substring(1))
-				  )
+					)
 				: this.responses.default()
 		);
 }
