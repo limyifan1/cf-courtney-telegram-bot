@@ -71,7 +71,10 @@ export default class TelegramBot extends TelegramApi {
 					source_lang: lang,
 					target_lang: "english",
 				});
-				return new TelegramInlineQueryResultArticle(response.translated_text);
+				return new TelegramInlineQueryResultArticle(
+					response.translated_text,
+					`${lang}: ${response.translated_text}`
+				);
 			})
 		);
 		return this.answerInlineQuery(
