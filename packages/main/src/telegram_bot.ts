@@ -63,7 +63,7 @@ export default class TelegramBot extends TelegramApi {
 		if (_prompt === "") {
 			_prompt = "";
 		}
-		const langs = ["french", "arabic", "german", "spanish"];
+		const langs = ["french", "arabic", "german", "spanish", "russian"];
 		const inline_articles = await Promise.all(
 			langs.map(async (lang) => {
 				const response = await ai.run("@cf/meta/m2m100-1.2b", {
