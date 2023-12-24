@@ -193,7 +193,7 @@ export default class TelegramBot extends TelegramApi {
 		const p = system_prompt + "[INST]" + _prompt + "[/INST]";
 		const prompt = p.slice(p.length - 4096, p.length);
 		const response = await ai
-			.run("@hf/thebloke/zephyr-7b-beta-awq", {
+			.run("@hf/thebloke/orca-2-13b-awq", {
 				prompt,
 				max_tokens: 596,
 			})
@@ -255,6 +255,30 @@ export default class TelegramBot extends TelegramApi {
 			_prompt = "";
 		}
 
+		const results = await (async () => {
+			if (this.db) {
+				const { results } = await this.db
+					.prepare("SELECT * FROM Messages WHERE userId=?")
+					.bind(
+						update.inline_query
+							? update.inline_query.from.id
+							: update.message?.from.id
+					)
+					.all();
+				return results;
+			}
+		})();
+
+		const old_messages: { role: string; content: string }[] = (() => {
+			if (results) {
+				return results.map((col) => ({
+					role: "system",
+					content: col.content as string,
+				}));
+			}
+			return [];
+		})();
+
 		const system_prompt =
 			"<s>" +
 			[
@@ -268,11 +292,18 @@ export default class TelegramBot extends TelegramApi {
 			].reduce((acc, cur) => {
 				return acc + cur + "\n";
 			}) +
+			old_messages.reduce((acc, cur) => {
+				return acc + cur.content + "\n";
+			}, "") +
 			"</s>";
 
+		const p = system_prompt + "[INST]" + _prompt + "[/INST]";
+		const prompt = p.slice(p.length - 4096, p.length);
+
 		const response = await ai
-			.run("@hf/thebloke/llama-2-13b-chat-awq", {
-				prompt: system_prompt + "[INST]" + _prompt + "[/INST]",
+			.run("@hf/thebloke/orca-2-13b-awq", {
+				prompt,
+				max_tokens: 596,
 			})
 			.then(({ response }) =>
 				response
@@ -280,6 +311,22 @@ export default class TelegramBot extends TelegramApi {
 					.replace(/<<(\/|)SYS>>/, "")
 					.replace(/[OUT]/, "")
 			);
+
+		if (this.db) {
+			const { success } = await this.db
+				.prepare("INSERT INTO Messages (id, userId, content) VALUES (?, ?, ?)")
+				.bind(
+					crypto.randomUUID(),
+					update.inline_query
+						? update.inline_query.from.id
+						: update.message?.from.id,
+					"[INST] " + _prompt + " [/INST]" + "\n" + response
+				)
+				.run();
+			if (!success) {
+				console.log("failed to insert data into d1");
+			}
+		}
 
 		if (update.inline_query) {
 			return this.answerInlineQuery(update.inline_query.id, [

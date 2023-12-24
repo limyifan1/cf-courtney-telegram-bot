@@ -29,7 +29,7 @@
 		"url": "https://github.com/codebam/cf-workers-telegram-bot.git"
 	},
 	"devDependencies": {
-		"@cloudflare/workers-types": "^4.20231121.0",
+		"@cloudflare/workers-types": "^4.20231218.0",
 		"@typescript-eslint/eslint-plugin": "^6.15.0",
 		"@typescript-eslint/parser": "^6.15.0",
 		"eslint": "^8.56.0",
@@ -39,6 +39,6 @@
 		"typescript": "^5.3.3"
 	},
 	"dependencies": {
-		"@cloudflare/ai": "^1.0.41"
+		"@cloudflare/ai": "^1.0.47"
 	}
 }
