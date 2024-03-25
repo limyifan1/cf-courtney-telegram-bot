@@ -72,7 +72,7 @@ export default class TelegramBot extends TelegramApi {
 					target_lang: "english",
 				});
 				return new TelegramInlineQueryResultArticle(
-					response.translated_text,
+					response.translated_text as string,
 					`${lang}: ${response.translated_text}`
 				);
 			})
@@ -197,6 +197,9 @@ export default class TelegramBot extends TelegramApi {
 				prompt,
 				max_tokens: 596,
 			})
+			.then(
+				(response) => Response.json(response) as unknown as { response: string }
+			)
 			.then(({ response }) =>
 				response
 					.replace(/(\[|)(\/|)INST(S|)(s|)(\]|)/, "")
@@ -305,6 +308,9 @@ export default class TelegramBot extends TelegramApi {
 				prompt,
 				max_tokens: 596,
 			})
+			.then(
+				(response) => Response.json(response) as unknown as { response: string }
+			)
 			.then(({ response }) =>
 				response
 					.replace(/(\[|)(\/|)INST(S|)(s|)(\]|)/, "")
