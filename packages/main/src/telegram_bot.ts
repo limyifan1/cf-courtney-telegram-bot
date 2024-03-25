@@ -197,9 +197,6 @@ export default class TelegramBot extends TelegramApi {
 				prompt,
 				max_tokens: 596,
 			})
-			.then(
-				(response) => Response.json(response) as unknown as { response: string }
-			)
 			.then(({ response }) =>
 				response
 					.replace(/(\[|)(\/|)INST(S|)(s|)(\]|)/, "")
@@ -308,9 +305,6 @@ export default class TelegramBot extends TelegramApi {
 				prompt,
 				max_tokens: 596,
 			})
-			.then(
-				(response) => Response.json(response) as unknown as { response: string }
-			)
 			.then(({ response }) =>
 				response
 					.replace(/(\[|)(\/|)INST(S|)(s|)(\]|)/, "")
