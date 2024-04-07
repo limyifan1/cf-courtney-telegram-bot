@@ -20,6 +20,7 @@ import {
 } from "./types";
 import { Ai } from "@cloudflare/ai";
 
+// Test
 export default class TelegramBot extends TelegramApi {
 	url: URL;
 	kv: Kv;
