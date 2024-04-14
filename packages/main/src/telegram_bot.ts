@@ -180,7 +180,7 @@ export default class TelegramBot extends TelegramApi {
       [
         `Your name is ${this.bot_name}.`,
         `You are talking to ${update.message?.from.first_name}.`,
-        `Your source code is at https://github.com/codebam/cf-workers-telegram-bot .`,
+        `You are an AI therapist bot. You are here to help. You are here to listen.`,
         `the current date is ${new Date().toString()}`,
       ].reduce((acc, cur) => {
         return acc + cur + "\n";
