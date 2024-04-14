@@ -137,6 +137,7 @@ export default class TelegramBot extends TelegramApi {
     update: TelegramUpdate,
     args: string[]
   ): Promise<Response> => {
+    console.log("running question");
     if (this.ai === undefined) {
       return new Response("ok");
     }
@@ -174,6 +175,7 @@ export default class TelegramBot extends TelegramApi {
       }
       return [];
     })();
+    console.log("old_messages", old_messages);
 
     const system_prompt =
       "<s>" +

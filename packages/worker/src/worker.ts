@@ -27,8 +27,9 @@ interface Environment {
 }
 
 export default {
-  fetch: async (request: Request, env: Environment) =>
-    new Handler([
+  fetch: async (request: Request, env: Environment) => {
+    console.log("fetching", env);
+    return new Handler([
       {
         bot_name: "@CourtneyTherapyBot",
         api: TelegramBot,
@@ -50,5 +51,6 @@ export default {
         db: env.DB,
         r2: env.R2,
       },
-    ]).handle(request),
+    ]).handle(request);
+  },
 };
