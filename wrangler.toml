@@ -17,3 +17,6 @@ database_id = "02cf6e8b-9f7e-46a9-9a95-dcc060d7c06d"
 [[r2_buckets]]
 binding = "R2"
 bucket_name = "share"
+
+[vars]
+# SECRET_TELEGRAM_API_TOKEN = "test"
