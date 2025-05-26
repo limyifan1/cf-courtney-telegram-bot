@@ -13,7 +13,7 @@
 	"author": "codebam",
 	"license": "Apache-2.0",
 	"devDependencies": {
-		"@babel/preset-env": "^7.27.1",
+		"@babel/preset-env": "^7.27.2",
 		"@cloudflare/workers-types": "^4.20250510.0",
 		"@typescript-eslint/eslint-plugin": "^7.15.0",
 		"@typescript-eslint/parser": "^7.18.0",
