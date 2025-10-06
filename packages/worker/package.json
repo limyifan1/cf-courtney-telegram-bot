@@ -20,7 +20,7 @@
 		"esbuild": "^0.25.10",
 		"esbuild-plugin-babel": "^0.2.3",
 		"esbuild-plugin-glob": "^2.2.3",
-		"eslint": "^8.57.1",
+		"eslint": "^9.37.0",
 		"eslint-config-prettier": "^10.1.8",
 		"lerna": "^9.0.0",
 		"prettier": "^3.6.2",
