@@ -36,7 +36,7 @@
 		"eslint-config-prettier": "^10.1.8",
 		"lerna": "^9.0.0",
 		"prettier": "^3.6.2",
-		"typescript": "^5.9.2"
+		"typescript": "^5.9.3"
 	},
 	"dependencies": {
 		"@cloudflare/ai": "1.0.53"
